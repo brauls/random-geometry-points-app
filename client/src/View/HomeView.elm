@@ -1,9 +1,10 @@
 module View.HomeView exposing (view)
 
-import Html exposing (Html, div, text)
+import Html exposing (Html, div)
 
 import Models exposing (Model)
+import View.Navigator exposing (navbar)
 
 view : Model -> Html msg
 view model =
-  div [] [ text "Home" ]
+  div [] [ navbar ]

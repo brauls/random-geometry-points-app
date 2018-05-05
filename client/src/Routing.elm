@@ -1,4 +1,4 @@
-module Routing exposing (parseLocation)
+module Routing exposing (..)
 
 import Navigation exposing (Location)
 import UrlParser exposing (Parser, parseHash, map, oneOf, top, s)
@@ -17,3 +17,9 @@ parseLocation location =
   case (parseHash matchers location) of
     Just route -> route
     Nothing -> Models.NotFoundRoute
+
+homePath : String
+homePath = "#"
+
+planePath : String
+planePath = "#plane"
