@@ -1,45 +1,35 @@
 module Main exposing (..)
 
-import Html exposing (Html, text, div, h1, img)
-import Html.Attributes exposing (src)
+import Navigation exposing (Location)
+
+import Models exposing (Model, initialModel)
+import Msgs exposing (Msg)
+import Routing
+import View.View exposing (view)
 
 
----- MODEL ----
+---- INIT ----
 
 
-type alias Model =
-    {}
-
-
-init : ( Model, Cmd Msg )
-init =
-    ( {}, Cmd.none )
-
+init : Location -> ( Model, Cmd Msg )
+init location =
+  let
+    currentRoute = Routing.parseLocation location
+  in
+    ( initialModel currentRoute, Cmd.none )
 
 
 ---- UPDATE ----
 
 
-type Msg
-    = NoOp
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
-
-
-
----- VIEW ----
-
-
-view : Model -> Html Msg
-view model =
-    div []
-        [ img [ src "/logo.svg" ] []
-        , h1 [] [ text "Your Elm App is working!" ]
-        ]
-
+  case msg of
+    Msgs.OnLocationChange location ->
+      let
+        newRoute = Routing.parseLocation location
+      in
+        ( { model | route = newRoute }, Cmd.none )
 
 
 ---- PROGRAM ----
@@ -47,9 +37,9 @@ view model =
 
 main : Program Never Model Msg
 main =
-    Html.program
-        { view = view
-        , init = init
-        , update = update
-        , subscriptions = always Sub.none
-        }
+  Navigation.program Msgs.OnLocationChange
+    { view = view
+    , init = init
+    , update = update
+    , subscriptions = always Sub.none
+    }
