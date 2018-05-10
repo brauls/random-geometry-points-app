@@ -10,11 +10,11 @@ import Models exposing (..)
 testRouting : Test
 testRouting =
   describe "Test the Routing module"
-      [ test "parseLocation home"
+      [ test "parseLocation - home"
           <| \_ -> Expect.equal HomeRoute (parseLocation homeLocation)
-      , test "parseLocation plane"
+      , test "parseLocation - plane"
           <| \_ -> Expect.equal PlaneRoute (parseLocation planeLocation)
-      , test "parseLocation unknown"
+      , test "parseLocation - unknown"
           <| \_ -> Expect.equal NotFoundRoute (parseLocation unknownLocation)
       ]
 
