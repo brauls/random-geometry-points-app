@@ -22,8 +22,14 @@ install:
   - npm install
 
 script:
-  - npm run test
-  - npm run build
+  - npm run test-server
+  - cd client
+  - $(npm config get prefix)/bin/elm-app test
+  - cd ..
+  - npm run build-server
+  - cd client
+  - $(npm config get prefix)/bin/elm-app build
+  - cd ..
 
 branches:
   only:
