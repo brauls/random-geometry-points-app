@@ -4,7 +4,16 @@
   "description": "App to generate random points on geometry surfaces",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test-server": "jest",
+    "test-client": "cd client/ && elm-app test",
+    "test": "concurrently \"npm run test-server\" \"npm run test-client\"",
+    "start-dev-server": "nodemon server/server.js --exec babel-node",
+    "start-dev-client": "cd client/ && elm-app start",
+    "start-dev": "concurrently --kill-others \"npm run start-dev-server\" \"npm run start-dev-client\"",
+    "build-server": "babel server -d dist --ignore *.test.js",
+    "build-client": "cd client/ && elm-app build",
+    "build": "concurrently \"npm run build-server\" \"npm run build-client\"",
+    "serve": "NODE_ENV=production node dist/server.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +35,14 @@
     "express": "^4.16.3"
   },
   "devDependencies": {
-    "eslint": "^4.19.1"
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "concurrently": "^3.5.1",
+    "eslint": "^4.19.1",
+    "jest": "^22.4.3",
+    "nodemon": "^1.17.4"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
