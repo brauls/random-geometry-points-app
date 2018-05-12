@@ -1,38 +1,22 @@
 language: node_js
 node_js:
   - "stable"
+
 cache:
   directories:
-  - node_modules
-  - client/elm-stuff
-  - sysconfcpus
+    - node_modules
+    - client/elm-stuff
+    - sysconfcpus
 
 sudo: required
-
-before_install:
-  - | # epic build time improvement - see https://github.com/elm-lang/elm-compiler/issues/1473#issuecomment-245704142
-      if [ ! -d sysconfcpus/bin ];
-      then
-        git clone https://github.com/obmarg/libsysconfcpus.git;
-        cd libsysconfcpus;
-        ./configure --prefix=$TRAVIS_BUILD_DIR/sysconfcpus -n 1;
-        make && make install;
-        cd ..;
-      fi
 
 install:
   - npm install create-elm-app -g
   - npm install
 
 script:
-  - npm run test-server
-  - cd client
-  - $(npm config get prefix)/bin/elm-app test
-  - cd ..
-  - npm run build-server
-  - cd client
-  - $(npm config get prefix)/bin/elm-app build
-  - cd ..
+  - npm run test
+  - npm run build
 
 branches:
   only:
