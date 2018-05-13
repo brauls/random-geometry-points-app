@@ -11,7 +11,7 @@
     "start-dev-server": "nodemon server/server.js --exec babel-node",
     "start-dev-client": "cd client/ && elm-app start",
     "start-dev": "concurrently --kill-others \"npm run start-dev-server\" \"npm run start-dev-client\"",
-    "build-server": "babel server -d dist --ignore *.test.js",
+    "build-server": "babel server -d dist --ignore *-test.js",
     "build-client": "cd client/ && elm-app build",
     "build": "concurrently \"npm run build-server\" \"npm run build-client\"",
     "serve": "NODE_ENV=production node dist/server.js"
@@ -54,7 +54,6 @@
     "testEnvironment": "node"
   },
   "lint-staged": {
-    "*.{js,css}": ["eslint --fix", "git add"],
-    "*.test.js": ["eslint --fix", "git add"]
+    "*.{js,css}": ["eslint --fix", "git add"]
   }
 }
