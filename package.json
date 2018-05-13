@@ -4,6 +4,7 @@
   "description": "App to generate random points on geometry surfaces",
   "main": "server.js",
   "scripts": {
+    "precommit": "lint-staged",
     "test-server": "jest",
     "test-client": "cd client/ && elm-app test",
     "test": "concurrently \"npm run test-server\" \"npm run test-client\"",
@@ -41,10 +42,18 @@
     "babel-preset-env": "^1.7.0",
     "concurrently": "^3.5.1",
     "eslint": "^4.19.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "husky": "^0.14.3",
     "jest": "^22.4.3",
-    "nodemon": "^1.17.4"
+    "lint-staged": "^7.1.0",
+    "nodemon": "^1.17.4",
+    "prettier": "^1.12.1"
   },
   "jest": {
     "testEnvironment": "node"
+  },
+  "lint-staged": {
+    "*.{js,css}": ["eslint --fix", "git add"]
   }
 }
