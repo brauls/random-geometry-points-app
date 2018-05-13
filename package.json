@@ -54,6 +54,7 @@
     "testEnvironment": "node"
   },
   "lint-staged": {
-    "*.{test.js,js,css}": ["eslint --fix", "git add"]
+    "*.{js,css}": ["eslint --fix", "git add"],
+    "*.test.js": ["eslint --fix", "git add"]
   }
 }
