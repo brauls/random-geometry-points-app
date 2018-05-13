@@ -48,12 +48,20 @@
     "jest": "^22.4.3",
     "lint-staged": "^7.1.0",
     "nodemon": "^1.17.4",
-    "prettier": "^1.12.1"
+    "prettier": "^1.12.1",
+    "prettier-plugin-elm": "^0.2.2"
   },
   "jest": {
     "testEnvironment": "node"
   },
   "lint-staged": {
-    "*.{js,css}": ["eslint --fix", "git add"]
+    "*.{js,css}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.elm": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
