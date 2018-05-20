@@ -3,6 +3,7 @@ module View.PlaneViewTest exposing (..)
 import Expect
 import Html exposing (Html, div)
 import Models exposing (..)
+import Msgs exposing (Msg)
 import Test exposing (..)
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (attribute, id, tag, text)
@@ -21,7 +22,7 @@ testPlaneView =
         ]
 
 
-planeHtml : Html msg
+planeHtml : Html Msg
 planeHtml =
     div []
         [ initialModel HomeRoute

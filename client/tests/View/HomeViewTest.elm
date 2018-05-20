@@ -3,6 +3,7 @@ module View.HomeViewTest exposing (..)
 import Expect
 import Html exposing (Html, div)
 import Models exposing (..)
+import Msgs exposing (Msg)
 import Test exposing (..)
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (attribute, id, tag, text)
@@ -33,7 +34,7 @@ testHomeView =
         ]
 
 
-homeHtml : Html msg
+homeHtml : Html Msg
 homeHtml =
     div []
         [ initialModel HomeRoute

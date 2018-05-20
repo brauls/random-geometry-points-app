@@ -33,6 +33,14 @@ update msg model =
             in
             ( { model | route = newRoute }, Cmd.none )
 
+        Msgs.OnToggleFormInputDetails inputId ->
+            case model.activeInfoLabelId == inputId of
+                True ->
+                    ( { model | activeInfoLabelId = "" }, Cmd.none )
+
+                False ->
+                    ( { model | activeInfoLabelId = inputId }, Cmd.none )
+
 
 
 ---- PROGRAM ----

@@ -9,5 +9,12 @@ testModels : Test
 testModels =
     describe "Test the Models module"
         [ test "initialModel" <|
-            \_ -> Expect.equal { route = HomeRoute } (initialModel HomeRoute)
+            \_ -> Expect.equal expectedModel (initialModel HomeRoute)
         ]
+
+
+expectedModel : Model
+expectedModel =
+    { route = HomeRoute
+    , activeInfoLabelId = ""
+    }

@@ -9,10 +9,12 @@ type Route
 
 type alias Model =
     { route : Route
+    , activeInfoLabelId : String
     }
 
 
 initialModel : Route -> Model
 initialModel route =
     { route = route
+    , activeInfoLabelId = ""
     }

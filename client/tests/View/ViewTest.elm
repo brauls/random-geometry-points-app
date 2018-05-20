@@ -3,6 +3,7 @@ module View.ViewTest exposing (..)
 import Expect
 import Html exposing (Html, div)
 import Models exposing (..)
+import Msgs exposing (Msg)
 import Test exposing (..)
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (attribute, id, tag, text)
@@ -33,7 +34,7 @@ testView =
         ]
 
 
-getHtml : Route -> Html msg
+getHtml : Route -> Html Msg
 getHtml route =
     div []
         [ initialModel route
