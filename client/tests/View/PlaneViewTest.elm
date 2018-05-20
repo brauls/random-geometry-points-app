@@ -19,6 +19,19 @@ testPlaneView =
                     |> Query.fromHtml
                     |> Query.findAll [ id "plane-view" ]
                     |> Query.count (Expect.equal 1)
+        , test "view - check presence of navbar" <|
+            \_ ->
+                planeHtml
+                    |> Query.fromHtml
+                    |> Query.find [ tag "nav" ]
+                    |> Query.has [ id "navbar" ]
+        , test "view - check presence of form" <|
+            \_ ->
+                planeHtml
+                    |> Query.fromHtml
+                    |> Query.find [ tag "form" ]
+                    |> Query.children []
+                    |> Query.count (Expect.equal 8)
         ]
 
 
