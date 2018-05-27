@@ -64,6 +64,7 @@ expectedLocationChangeModel : Model
 expectedLocationChangeModel =
     { route = PlaneRoute
     , activeInfoLabelId = ""
+    , planeParameters = initialPlaneParams
     }
 
 
@@ -85,6 +86,7 @@ expectedAvailableInfoLabelModel : Model
 expectedAvailableInfoLabelModel =
     { route = HomeRoute
     , activeInfoLabelId = "info-label-id"
+    , planeParameters = initialPlaneParams
     }
 
 
@@ -92,6 +94,7 @@ expectedUnavailableInfoLabelModel : Model
 expectedUnavailableInfoLabelModel =
     { route = HomeRoute
     , activeInfoLabelId = ""
+    , planeParameters = initialPlaneParams
     }
 
 

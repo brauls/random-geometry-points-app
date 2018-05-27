@@ -2,6 +2,7 @@ module View.FormElementsTest exposing (..)
 
 import Fuzz exposing (string)
 import Html.Attributes as Attr
+import Models
 import Test exposing (Test, describe, fuzz)
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (attribute, id, tag, text)
@@ -49,6 +50,10 @@ testFormElements =
 
 geometryFormParam : GeometryFormParam
 geometryFormParam =
-    { name = "radius"
+    { param =
+        { paramType = Models.Radius
+        , value = ""
+        , error = Models.NoError
+        }
     , description = "the radius description"
     }

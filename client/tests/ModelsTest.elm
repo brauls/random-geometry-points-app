@@ -17,4 +17,5 @@ expectedModel : Model
 expectedModel =
     { route = HomeRoute
     , activeInfoLabelId = ""
+    , planeParameters = initialPlaneParams
     }
