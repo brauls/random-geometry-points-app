@@ -1,9 +1,10 @@
 module Main exposing (..)
 
-import Models exposing (Model, initialModel)
+import Models exposing (FormParamError, Model, getParamType, initialModel)
 import Msgs exposing (Msg)
 import Navigation exposing (Location)
 import Routing
+import View.FormValidation exposing (validateFormParam)
 import View.View exposing (view)
 
 
@@ -40,6 +41,29 @@ update msg model =
 
                 False ->
                     ( { model | activeInfoLabelId = inputId }, Cmd.none )
+
+        Msgs.OnChangePlaneParameter paramName value ->
+            let
+                paramType =
+                    getParamType paramName
+
+                error =
+                    validateFormParam paramType value
+
+                updateParam =
+                    \param ->
+                        case param.paramType == paramType of
+                            True ->
+                                { paramType = paramType, value = value, error = error }
+
+                            False ->
+                                param
+
+                planeParams =
+                    model.planeParameters
+                        |> List.map updateParam
+            in
+            ( { model | planeParameters = planeParams }, Cmd.none )
 
 
 

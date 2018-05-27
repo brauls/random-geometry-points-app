@@ -2,7 +2,7 @@ module View.PlaneView exposing (view)
 
 import Html exposing (Html, div, form, input, label, small, text)
 import Html.Attributes exposing (class, for, id, property)
-import Models exposing (Model)
+import Models exposing (GeometryParam, GeometryParamType, Model)
 import Msgs exposing (..)
 import View.Container exposing (embed)
 import View.FormElements exposing (GeometryFormParam, geometryForm)
@@ -19,37 +19,52 @@ view model =
 
 planeForm : Model -> Html Msg
 planeForm model =
-    geometryForm "plane" planeFormParams model.activeInfoLabelId
-
-
-planeFormParams : List GeometryFormParam
-planeFormParams =
     let
-        params =
-            [ { name = "number"
-              , description = "The number of plane points to be generated"
-              }
-            , { name = "x"
-              , description = "The x coordinate of the reference point."
-              }
-            , { name = "y"
-              , description = "The y coordinate of the reference point."
-              }
-            , { name = "z"
-              , description = "The z coordinate of the reference point."
-              }
-            , { name = "i"
-              , description = "The x component of the normal vector."
-              }
-            , { name = "j"
-              , description = "The y component of the normal vector."
-              }
-            , { name = "k"
-              , description = "The z component of the normal vector."
-              }
-            , { name = "radius"
-              , description = "The radius around the refernce point in which the plane points are randomly created."
-              }
-            ]
+        formParams =
+            planeFormParams model.planeParameters
     in
-    params
+    geometryForm "plane" formParams model.activeInfoLabelId
+
+
+planeFormParams : List GeometryParam -> List GeometryFormParam
+planeFormParams params =
+    let
+        convertParam =
+            \p -> { param = p, description = getParameterDescription p.paramType }
+
+        formParams =
+            params
+                |> List.map convertParam
+    in
+    formParams
+
+
+getParameterDescription : GeometryParamType -> String
+getParameterDescription paramType =
+    case paramType of
+        Models.X ->
+            "The x coordinate of the reference point."
+
+        Models.Y ->
+            "The y coordinate of the reference point."
+
+        Models.Z ->
+            "The z coordinate of the reference point."
+
+        Models.I ->
+            "The x component of the normal vector."
+
+        Models.J ->
+            "The y component of the normal vector."
+
+        Models.K ->
+            "The z component of the normal vector."
+
+        Models.Radius ->
+            "The radius around the refernce point in which the plane points are randomly created."
+
+        Models.PointCount ->
+            "The number of plane points to be generated"
+
+        _ ->
+            ""

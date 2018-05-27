@@ -14,6 +14,7 @@ app.get("/hello", (req, res) => {
 app.get("/plane-points", (req, res) => {
   const url =
     "http://random-geometry-points-service.herokuapp.com/random-plane-points/3d/";
+  console.log(req.query);
   const params = [
     {
       key: "num_points",

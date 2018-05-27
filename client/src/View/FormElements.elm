@@ -2,13 +2,14 @@ module View.FormElements exposing (GeometryFormParam, geometryForm)
 
 import Html exposing (Html, button, div, form, h5, input, label, p, small, span, text)
 import Html.Attributes exposing (attribute, class, for, id, property, tabindex, type_)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
 import Json.Encode as Encode
+import Models exposing (GeometryParam, GeometryParamType, getFormParamErrorMsg, getParamTypeName)
 import Msgs exposing (..)
 
 
 type alias GeometryFormParam =
-    { name : String
+    { param : GeometryParam
     , description : String
     }
 
@@ -25,8 +26,11 @@ geometryForm geometryName geometryParams activeInfoLabelId =
 formRow : String -> String -> GeometryFormParam -> Html Msg
 formRow activeInfoLabelId geometryName geometryParam =
     let
+        paramTypeName =
+            getParamTypeName geometryParam.param.paramType
+
         postfix =
-            geometryName ++ "-" ++ geometryParam.name
+            geometryName ++ "-" ++ paramTypeName
 
         labelId =
             "label-" ++ postfix
@@ -37,19 +41,34 @@ formRow activeInfoLabelId geometryName geometryParam =
         descriptionId =
             "label-description-" ++ postfix
 
+        errorId =
+            "label-error-" ++ postfix
+
         infoButtonId =
             "button-info-" ++ postfix
 
         describedByIds =
             [ descriptionId, infoButtonId ]
 
-        forceVisibility =
+        forceInfoTextVisibility =
             activeInfoLabelId == infoButtonId
+
+        errorMsg =
+            getFormParamErrorMsg geometryParam.param.error
+
+        isError =
+            case geometryParam.param.error of
+                Models.NoError ->
+                    False
+
+                _ ->
+                    True
     in
     div [ class "form-group row mb-0" ]
-        [ formControlLabel labelId formControlId geometryParam.name
-        , formControl formControlId labelId infoButtonId describedByIds forceVisibility
-        , formControlDescriptionLabel descriptionId geometryParam.description forceVisibility
+        [ formControlLabel labelId formControlId paramTypeName
+        , formControl formControlId geometryParam.param.paramType labelId infoButtonId describedByIds forceInfoTextVisibility
+        , formControlDescriptionLabel descriptionId geometryParam.description forceInfoTextVisibility
+        , formControlErrorLabel errorId errorMsg isError
         ]
 
 
@@ -76,8 +95,8 @@ formControlDescriptionLabel labelId description forceVisibility =
         ]
 
 
-formControl : String -> String -> String -> List String -> Bool -> Html Msg
-formControl formControlId labeledBy infoButtonId describedBy isInfoActive =
+formControl : String -> GeometryParamType -> String -> String -> List String -> Bool -> Html Msg
+formControl formControlId paramType labeledBy infoButtonId describedBy isInfoActive =
     div [ class "col-sm-4 col-8" ]
         [ div [ class "row align-items-center" ]
             [ div [ class "col pr-0" ]
@@ -87,11 +106,29 @@ formControl formControlId labeledBy infoButtonId describedBy isInfoActive =
                     , property "aria-labelledby" (Encode.string labeledBy)
                     , property "aria-describedby" (describedBy |> joinStrings |> Encode.string)
                     , property "type" (Encode.string "text")
+                    , onInput (Msgs.OnChangePlaneParameter (getParamTypeName paramType))
                     ]
                     []
                 ]
             , div [ class "col-xs-auto align-middle" ] [ infoButton infoButtonId isInfoActive ]
             ]
+        ]
+
+
+formControlErrorLabel : String -> String -> Bool -> Html msg
+formControlErrorLabel labelId errorMsg isVisible =
+    let
+        className =
+            case isVisible of
+                True ->
+                    "col-12"
+
+                False ->
+                    "d-none col-12"
+    in
+    div [ class className ]
+        [ small [ id labelId, class "bg-warning text-dark" ]
+            [ text errorMsg ]
         ]
 
 
