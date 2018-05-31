@@ -1,7 +1,7 @@
 module View.FormElements exposing (GeometryFormParam, geometryForm)
 
 import Html exposing (Html, button, div, form, h5, input, label, p, small, span, text)
-import Html.Attributes exposing (attribute, class, for, id, property, tabindex, type_)
+import Html.Attributes exposing (attribute, class, for, id, property, required, tabindex, type_, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Encode as Encode
 import Models exposing (GeometryParam, GeometryParamType, getFormParamErrorMsg, getParamTypeName)
@@ -11,6 +11,16 @@ import Msgs exposing (..)
 type alias GeometryFormParam =
     { param : GeometryParam
     , description : String
+    }
+
+
+type alias GeometryFormMetaData =
+    { formControlId : String
+    , labelId : String
+    , descriptionLabelId : String
+    , errorLabelId : String
+    , infoButtonId : String
+    , alwaysShowInfoText : Bool
     }
 
 
@@ -32,55 +42,51 @@ formRow activeInfoLabelId geometryName geometryParam =
         postfix =
             geometryName ++ "-" ++ paramTypeName
 
-        labelId =
-            "label-" ++ postfix
-
-        formControlId =
-            "input-" ++ postfix
-
-        descriptionId =
-            "label-description-" ++ postfix
-
-        errorId =
-            "label-error-" ++ postfix
-
         infoButtonId =
             "button-info-" ++ postfix
 
-        describedByIds =
-            [ descriptionId, infoButtonId ]
-
-        forceInfoTextVisibility =
-            activeInfoLabelId == infoButtonId
-
-        errorMsg =
-            getFormParamErrorMsg geometryParam.param.error
-
-        isError =
-            case geometryParam.param.error of
-                Models.NoError ->
-                    False
-
-                _ ->
-                    True
+        formMetaData =
+            { formControlId = "input-" ++ postfix
+            , labelId = "label-" ++ postfix
+            , descriptionLabelId = "label-description-" ++ postfix
+            , errorLabelId = "label-error-" ++ postfix
+            , infoButtonId = infoButtonId
+            , alwaysShowInfoText = activeInfoLabelId == infoButtonId
+            }
     in
     div [ class "form-group row mb-0" ]
-        [ formControlLabel labelId formControlId paramTypeName
-        , formControl formControlId geometryParam.param.paramType labelId infoButtonId describedByIds forceInfoTextVisibility
-        , formControlDescriptionLabel descriptionId geometryParam.description forceInfoTextVisibility
-        , formControlErrorLabel errorId errorMsg isError
+        [ formControlLabel formMetaData geometryParam
+        , formControl formMetaData geometryParam
+        , formControlDescriptionLabel formMetaData geometryParam
+        , formControlErrorLabel formMetaData geometryParam
         ]
 
 
-formControlLabel : String -> String -> String -> Html msg
-formControlLabel labelId formControlId title =
+formControlLabel : GeometryFormMetaData -> GeometryFormParam -> Html msg
+formControlLabel formMetaData formParam =
+    let
+        formControlId =
+            formMetaData.formControlId
+
+        labelId =
+            formMetaData.labelId
+
+        title =
+            getParamTypeName formParam.param.paramType
+    in
     div [ class "col-form-label col-sm-2 col-4" ]
         [ label [ id labelId, for formControlId ] [ text title ] ]
 
 
-formControlDescriptionLabel : String -> String -> Bool -> Html msg
-formControlDescriptionLabel labelId description forceVisibility =
+formControlDescriptionLabel : GeometryFormMetaData -> GeometryFormParam -> Html msg
+formControlDescriptionLabel formMetaData formParam =
     let
+        labelId =
+            formMetaData.descriptionLabelId
+
+        forceVisibility =
+            formMetaData.alwaysShowInfoText
+
         classNames =
             case forceVisibility of
                 False ->
@@ -88,6 +94,9 @@ formControlDescriptionLabel labelId description forceVisibility =
 
                 True ->
                     "col-form-label col-sm-6 col-12"
+
+        description =
+            formParam.description
     in
     div [ class classNames ]
         [ small [ id labelId, class "text-info" ]
@@ -95,18 +104,45 @@ formControlDescriptionLabel labelId description forceVisibility =
         ]
 
 
-formControl : String -> GeometryParamType -> String -> String -> List String -> Bool -> Html Msg
-formControl formControlId paramType labeledBy infoButtonId describedBy isInfoActive =
+formControl : GeometryFormMetaData -> GeometryFormParam -> Html Msg
+formControl formMetaData formParam =
+    let
+        formControlId =
+            formMetaData.formControlId
+
+        labeledBy =
+            formMetaData.labelId
+
+        infoButtonId =
+            formMetaData.infoButtonId
+
+        isInfoActive =
+            formMetaData.alwaysShowInfoText
+
+        descriptionId =
+            formMetaData.descriptionLabelId
+
+        describedBy =
+            [ descriptionId, infoButtonId ]
+
+        paramTypeName =
+            getParamTypeName formParam.param.paramType
+
+        currentValue =
+            formParam.param.value
+    in
     div [ class "col-sm-4 col-8" ]
         [ div [ class "row align-items-center" ]
             [ div [ class "col pr-0" ]
                 [ input
                     [ id formControlId
+                    , value currentValue
                     , class "form-control mx-m-3"
                     , property "aria-labelledby" (Encode.string labeledBy)
                     , property "aria-describedby" (describedBy |> joinStrings |> Encode.string)
                     , property "type" (Encode.string "text")
-                    , onInput (Msgs.OnChangePlaneParameter (getParamTypeName paramType))
+                    , onInput (Msgs.OnChangePlaneParameter paramTypeName)
+                    , required True
                     ]
                     []
                 ]
@@ -115,16 +151,22 @@ formControl formControlId paramType labeledBy infoButtonId describedBy isInfoAct
         ]
 
 
-formControlErrorLabel : String -> String -> Bool -> Html msg
-formControlErrorLabel labelId errorMsg isVisible =
+formControlErrorLabel : GeometryFormMetaData -> GeometryFormParam -> Html msg
+formControlErrorLabel formMetaData formParam =
     let
-        className =
-            case isVisible of
-                True ->
-                    "col-12"
+        labelId =
+            formMetaData.labelId
 
-                False ->
+        errorMsg =
+            getFormParamErrorMsg formParam.param.error
+
+        className =
+            case formParam.param.error of
+                Models.NoError ->
                     "d-none col-12"
+
+                _ ->
+                    "col-12"
     in
     div [ class className ]
         [ small [ id labelId, class "bg-warning text-dark" ]
