@@ -22,6 +22,9 @@ validate paramType value =
         Models.PointCount ->
             validatePointCount value
 
+        Models.UnknownParam ->
+            Models.NoError
+
         _ ->
             validateGeneralGeometryParam value
 

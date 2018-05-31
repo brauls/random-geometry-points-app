@@ -15,6 +15,18 @@ type FormParamError
     | NotPositive
 
 
+type GeometryParamType
+    = Radius
+    | X
+    | Y
+    | Z
+    | I
+    | J
+    | K
+    | PointCount
+    | UnknownParam
+
+
 getFormParamErrorMsg : FormParamError -> String
 getFormParamErrorMsg error =
     case error of
@@ -32,18 +44,6 @@ getFormParamErrorMsg error =
 
         NotPositive ->
             "The input value has to be positive"
-
-
-type GeometryParamType
-    = Radius
-    | X
-    | Y
-    | Z
-    | I
-    | J
-    | K
-    | PointCount
-    | UnknownParam
 
 
 getParamTypeName : GeometryParamType -> String
