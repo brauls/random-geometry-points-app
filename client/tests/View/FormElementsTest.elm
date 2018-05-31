@@ -1,9 +1,12 @@
 module View.FormElementsTest exposing (..)
 
+import Expect
 import Fuzz exposing (string)
 import Html.Attributes as Attr
 import Models
-import Test exposing (Test, describe, fuzz)
+import Msgs
+import Test exposing (Test, describe, fuzz, test)
+import Test.Html.Event as Event
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (attribute, id, tag, text)
 import View.FormElements exposing (GeometryFormParam, geometryForm)
@@ -45,6 +48,14 @@ testFormElements =
                         , id ("label-description-" ++ geometryName ++ "-radius")
                         ]
                     |> Query.has [ text "the radius description" ]
+        , test "Test the OnChangePlaneParameter msg to be triggered" <|
+            \_ ->
+                geometryForm "plane" [ geometryFormParam ] ""
+                    |> Query.fromHtml
+                    |> Query.find [ tag "input", id "input-plane-radius" ]
+                    |> Event.simulate (Event.input "3")
+                    |> Event.toResult
+                    |> Expect.equal (Ok (Msgs.OnChangePlaneParameter "radius" "3"))
         ]
 
 
