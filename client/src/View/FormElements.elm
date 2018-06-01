@@ -155,7 +155,7 @@ formControlErrorLabel : GeometryFormMetaData -> GeometryFormParam -> Html msg
 formControlErrorLabel formMetaData formParam =
     let
         labelId =
-            formMetaData.labelId
+            formMetaData.errorLabelId
 
         errorMsg =
             getFormParamErrorMsg formParam.param.error
