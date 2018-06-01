@@ -112,35 +112,35 @@ initialPlaneParams : List GeometryParam
 initialPlaneParams =
     [ { paramType = PointCount
       , value = ""
-      , error = NoError
+      , error = NoInput
       }
     , { paramType = X
       , value = ""
-      , error = NoError
+      , error = NoInput
       }
     , { paramType = Y
       , value = ""
-      , error = NoError
+      , error = NoInput
       }
     , { paramType = Z
       , value = ""
-      , error = NoError
+      , error = NoInput
       }
     , { paramType = I
       , value = ""
-      , error = NoError
+      , error = NoInput
       }
     , { paramType = J
       , value = ""
-      , error = NoError
+      , error = NoInput
       }
     , { paramType = K
       , value = ""
-      , error = NoError
+      , error = NoInput
       }
     , { paramType = Radius
       , value = ""
-      , error = NoError
+      , error = NoInput
       }
     ]
 

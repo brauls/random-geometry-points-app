@@ -7,3 +7,4 @@ type Msg
     = OnLocationChange Location
     | OnToggleFormInputDetails String
     | OnChangePlaneParameter String String
+    | OnSubmitPlaneParameters

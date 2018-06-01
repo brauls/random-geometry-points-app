@@ -13,7 +13,7 @@ testModels =
         , test "initialPlaneParams - no error as default" <|
             \_ ->
                 initialPlaneParams
-                    |> List.map (\param -> param.error == NoError)
+                    |> List.map (\param -> param.error == NoInput)
                     |> List.foldr (&&) True
                     |> Expect.true "Expected the initial paramter to contain no error"
         , test "initialPlaneParams - empty string as default value" <|

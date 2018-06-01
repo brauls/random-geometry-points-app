@@ -31,7 +31,7 @@ testPlaneView =
                     |> Query.fromHtml
                     |> Query.find [ tag "form" ]
                     |> Query.children []
-                    |> Query.count (Expect.equal 8)
+                    |> Query.count (Expect.equal 9)
         ]
 
 

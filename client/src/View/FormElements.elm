@@ -1,8 +1,8 @@
 module View.FormElements exposing (GeometryFormParam, geometryForm)
 
 import Html exposing (Html, button, div, form, h5, input, label, p, small, span, text)
-import Html.Attributes exposing (attribute, class, for, id, property, required, tabindex, type_, value)
-import Html.Events exposing (onClick, onInput)
+import Html.Attributes exposing (attribute, class, disabled, for, id, property, required, tabindex, type_, value)
+import Html.Events exposing (onClick, onInput, onSubmit)
 import Json.Encode as Encode
 import Models exposing (GeometryParam, GeometryParamType, getFormParamErrorMsg, getParamTypeName)
 import Msgs exposing (..)
@@ -29,8 +29,11 @@ geometryForm geometryName geometryParams activeInfoLabelId =
     let
         formRows =
             List.map (formRow activeInfoLabelId geometryName) geometryParams
+
+        submitButton =
+            formControlSubmitButton geometryParams
     in
-    form [] formRows
+    form [] (formRows ++ [ submitButton ])
 
 
 formRow : String -> String -> GeometryFormParam -> Html Msg
@@ -193,6 +196,29 @@ infoButton infoButtonId isActive =
         , onClick (OnToggleFormInputDetails infoButtonId)
         ]
         [ text "" ]
+
+
+formControlSubmitButton : List GeometryFormParam -> Html Msg
+formControlSubmitButton geometryParams =
+    let
+        mapFormError =
+            \param -> not (param.param.error == Models.NoError)
+
+        hasFormError =
+            geometryParams
+                |> List.map mapFormError
+                |> List.foldr (||) False
+    in
+    div [ class "col-12" ]
+        [ button
+            [ class "btn btn-primary btn-block"
+            , type_ "submit"
+            , disabled hasFormError
+            , onSubmit Msgs.OnSubmitPlaneParameters
+            ]
+            [ text "create random points"
+            ]
+        ]
 
 
 joinStrings : List String -> String

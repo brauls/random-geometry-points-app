@@ -65,6 +65,9 @@ update msg model =
             in
             ( { model | planeParameters = planeParams }, Cmd.none )
 
+        Msgs.OnSubmitPlaneParameters ->
+            ( model, Cmd.none )
+
 
 
 ---- PROGRAM ----
