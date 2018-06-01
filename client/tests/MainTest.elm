@@ -57,6 +57,18 @@ testMainUpdate =
             \_ -> Expect.equal Cmd.none (getUpdateActiveInfoLabelCmd expectedUnavailableInfoLabelModel "info-label-id")
         , test "update - check set active info label cmd when previously available" <|
             \_ -> Expect.equal Cmd.none (getUpdateActiveInfoLabelCmd expectedAvailableInfoLabelModel "")
+        , test "update - check update plane radius" <|
+            \_ ->
+                getUpdatePlaneParamModel (getInitModel homeLocation) "radius" "3.5"
+                    |> Expect.equal (expectedUpdatePlaneParamModel Models.Radius "3.5")
+        , test "update - check update plane radius with invalid value" <|
+            \_ ->
+                getUpdatePlaneParamModel (getInitModel homeLocation) "radius" "-4"
+                    |> Expect.equal (expectedUpdatePlaneParamErrorModel Models.Radius "-4" Models.NotPositive)
+        , test "update - check update plane parameter cmd" <|
+            \_ ->
+                getUpdatePlaneParamCmd (getInitModel homeLocation) "radius" "3"
+                    |> Expect.equal Cmd.none
         ]
 
 
@@ -109,4 +121,60 @@ getUpdateActiveInfoLabelCmd : Model -> String -> Cmd Msg
 getUpdateActiveInfoLabelCmd currentModel labelId =
     currentModel
         |> Main.update (Msgs.OnToggleFormInputDetails labelId)
+        |> Tuple.second
+
+
+expectedUpdatePlaneParamModel : GeometryParamType -> String -> Model
+expectedUpdatePlaneParamModel paramType value =
+    let
+        mapFormParam =
+            \param ->
+                if param.paramType == paramType then
+                    { paramType = paramType
+                    , value = value
+                    , error = Models.NoError
+                    }
+                else
+                    param
+    in
+    { route = HomeRoute
+    , activeInfoLabelId = ""
+    , planeParameters =
+        initialPlaneParams
+            |> List.map mapFormParam
+    }
+
+
+expectedUpdatePlaneParamErrorModel : GeometryParamType -> String -> FormParamError -> Model
+expectedUpdatePlaneParamErrorModel paramType value error =
+    let
+        mapFormParam =
+            \param ->
+                if param.paramType == paramType then
+                    { paramType = paramType
+                    , value = value
+                    , error = error
+                    }
+                else
+                    param
+    in
+    { route = HomeRoute
+    , activeInfoLabelId = ""
+    , planeParameters =
+        initialPlaneParams
+            |> List.map mapFormParam
+    }
+
+
+getUpdatePlaneParamModel : Model -> String -> String -> Model
+getUpdatePlaneParamModel currentModel paramName value =
+    currentModel
+        |> Main.update (Msgs.OnChangePlaneParameter paramName value)
+        |> Tuple.first
+
+
+getUpdatePlaneParamCmd : Model -> String -> String -> Cmd Msg
+getUpdatePlaneParamCmd currentModel paramName value =
+    currentModel
+        |> Main.update (Msgs.OnChangePlaneParameter paramName value)
         |> Tuple.second
