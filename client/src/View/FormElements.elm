@@ -6,6 +6,7 @@ import Html.Events exposing (onClick, onInput, onSubmit)
 import Json.Encode as Encode
 import Models exposing (GeometryParam, GeometryParamType, getFormParamErrorMsg, getParamTypeName)
 import Msgs exposing (..)
+import Selectors exposing (hasPlaneFormError)
 
 
 type alias GeometryFormParam =
@@ -201,13 +202,11 @@ infoButton infoButtonId isActive =
 formControlSubmitButton : List GeometryFormParam -> Html Msg
 formControlSubmitButton geometryParams =
     let
-        mapFormError =
-            \param -> not (param.param.error == Models.NoError)
+        planeParams =
+            geometryParams |> List.map (\param -> param.param)
 
         hasFormError =
-            geometryParams
-                |> List.map mapFormError
-                |> List.foldr (||) False
+            hasPlaneFormError planeParams
     in
     div [ class "col-12" ]
         [ button
