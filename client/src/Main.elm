@@ -3,7 +3,9 @@ module Main exposing (..)
 import Models exposing (FormParamError, Model, getParamType, initialModel)
 import Msgs exposing (Msg)
 import Navigation exposing (Location)
+import RequestBuilder exposing (..)
 import Routing
+import Selectors exposing (hasPlaneFormError)
 import View.FormValidation exposing (validateFormParam)
 import View.View exposing (view)
 
@@ -66,7 +68,19 @@ update msg model =
             ( { model | planeParameters = planeParams }, Cmd.none )
 
         Msgs.OnSubmitPlaneParameters ->
-            ( model, Cmd.none )
+            let
+                hasFormError =
+                    hasPlaneFormError model.planeParameters
+
+                cmd =
+                    case hasFormError of
+                        True ->
+                            Cmd.none
+
+                        False ->
+                            randomPlanePointsCmd model.planeParameters
+            in
+            ( model, cmd )
 
         Msgs.OnRandomPlanePointsResult response ->
             ( model, Cmd.none )
