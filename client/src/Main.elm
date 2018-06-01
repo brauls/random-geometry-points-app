@@ -68,6 +68,9 @@ update msg model =
         Msgs.OnSubmitPlaneParameters ->
             ( model, Cmd.none )
 
+        Msgs.OnRandomPlanePointsResult response ->
+            ( model, Cmd.none )
+
 
 
 ---- PROGRAM ----

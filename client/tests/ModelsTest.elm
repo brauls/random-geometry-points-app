@@ -2,6 +2,7 @@ module ModelsTest exposing (..)
 
 import Expect
 import Models exposing (..)
+import RemoteData
 import Test exposing (..)
 
 
@@ -30,4 +31,5 @@ expectedModel =
     { route = HomeRoute
     , activeInfoLabelId = ""
     , planeParameters = initialPlaneParams
+    , randomPlanePoints = RemoteData.NotAsked
     }

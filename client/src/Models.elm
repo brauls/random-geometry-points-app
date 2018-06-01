@@ -1,5 +1,7 @@
 module Models exposing (..)
 
+import RemoteData exposing (WebData)
+
 
 type Route
     = HomeRoute
@@ -152,10 +154,18 @@ type alias GeometryParam =
     }
 
 
+type alias Point3D =
+    { x : Float
+    , y : Float
+    , z : Float
+    }
+
+
 type alias Model =
     { route : Route
     , activeInfoLabelId : String
     , planeParameters : List GeometryParam
+    , randomPlanePoints : WebData (List Point3D)
     }
 
 
@@ -164,4 +174,5 @@ initialModel route =
     { route = route
     , activeInfoLabelId = ""
     , planeParameters = initialPlaneParams
+    , randomPlanePoints = RemoteData.NotAsked
     }

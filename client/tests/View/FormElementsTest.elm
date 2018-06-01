@@ -94,12 +94,20 @@ testFormElements =
                     |> Query.fromHtml
                     |> Query.find [ tag "small", id "label-error-plane-radius" ]
                     |> Query.has [ Models.NotPositive |> getFormParamErrorMsg |> text ]
-        , test "Test the form row submit button presence" <|
+        , test "Test the form submit button presence" <|
             \_ ->
                 geometryForm "plane" [ geometryFormParam ] ""
                     |> Query.fromHtml
                     |> Query.find [ tag "button", attribute <| Attr.type_ "submit" ]
                     |> Query.has [ text "create random points" ]
+        , test "Test the form submit button OnSubmitPlaneParameters msg to be triggered" <|
+            \_ ->
+                geometryForm "plane" [ geometryFormParam ] ""
+                    |> Query.fromHtml
+                    |> Query.find [ tag "button", attribute <| Attr.type_ "submit" ]
+                    |> Event.simulate Event.submit
+                    |> Event.toResult
+                    |> Expect.equal (Ok Msgs.OnSubmitPlaneParameters)
         ]
 
 

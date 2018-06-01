@@ -5,6 +5,7 @@ import Main exposing (..)
 import Models exposing (..)
 import Msgs exposing (..)
 import Navigation exposing (Location)
+import RemoteData
 import RoutingTest exposing (homeLocation, planeLocation, unknownLocation)
 import Test exposing (..)
 
@@ -77,6 +78,7 @@ expectedLocationChangeModel =
     { route = PlaneRoute
     , activeInfoLabelId = ""
     , planeParameters = initialPlaneParams
+    , randomPlanePoints = RemoteData.NotAsked
     }
 
 
@@ -99,6 +101,7 @@ expectedAvailableInfoLabelModel =
     { route = HomeRoute
     , activeInfoLabelId = "info-label-id"
     , planeParameters = initialPlaneParams
+    , randomPlanePoints = RemoteData.NotAsked
     }
 
 
@@ -107,6 +110,7 @@ expectedUnavailableInfoLabelModel =
     { route = HomeRoute
     , activeInfoLabelId = ""
     , planeParameters = initialPlaneParams
+    , randomPlanePoints = RemoteData.NotAsked
     }
 
 
@@ -142,6 +146,7 @@ expectedUpdatePlaneParamModel paramType value =
     , planeParameters =
         initialPlaneParams
             |> List.map mapFormParam
+    , randomPlanePoints = RemoteData.NotAsked
     }
 
 
@@ -163,6 +168,7 @@ expectedUpdatePlaneParamErrorModel paramType value error =
     , planeParameters =
         initialPlaneParams
             |> List.map mapFormParam
+    , randomPlanePoints = RemoteData.NotAsked
     }
 
 
