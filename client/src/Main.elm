@@ -1,5 +1,6 @@
 module Main exposing (..)
 
+import Debug
 import Models exposing (FormParamError, Model, getParamType, initialModel)
 import Msgs exposing (Msg)
 import Navigation exposing (Location)
@@ -16,10 +17,17 @@ import View.View exposing (view)
 init : Location -> ( Model, Cmd Msg )
 init location =
     let
+        -- if app runs on port 3000 its the dev server
+        isProductionEnv =
+            not (location.port_ == "3000")
+
         currentRoute =
             Routing.parseLocation location
+
+        model =
+            initialModel currentRoute
     in
-    ( initialModel currentRoute, Cmd.none )
+    ( { model | isProductionEnv = isProductionEnv }, Cmd.none )
 
 
 
@@ -69,6 +77,9 @@ update msg model =
 
         Msgs.OnSubmitPlaneParameters ->
             let
+                _ =
+                    Debug.log "submit" "now"
+
                 hasFormError =
                     hasPlaneFormError model.planeParameters
 
@@ -78,11 +89,15 @@ update msg model =
                             Cmd.none
 
                         False ->
-                            randomPlanePointsCmd model.planeParameters
+                            randomPlanePointsCmd model.isProductionEnv model.planeParameters
             in
             ( model, cmd )
 
         Msgs.OnRandomPlanePointsResult response ->
+            let
+                _ =
+                    Debug.log "on result" response
+            in
             ( model, Cmd.none )
 
 

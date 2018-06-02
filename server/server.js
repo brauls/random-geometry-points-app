@@ -5,6 +5,12 @@ const app = express();
 
 if (process.env.NODE_ENV === "production") {
   app.use("/", express.static(__dirname + "/../client/build"));
+} else {
+  app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Headers", "Origin");
+    next();
+  });
 }
 
 app.get("/hello", (req, res) => {
@@ -53,18 +59,27 @@ app.get("/random-plane-points", (req, res) => {
   axios
     .get(urlWithParams)
     .then(response => {
-      console.log(response.data);
+      const randomPoints = response.data.map(pnt => ({
+        x: pnt.x_coord,
+        y: pnt.y_coord,
+        z: pnt.z_coord
+      }));
+      res.send(randomPoints);
+      console.log(randomPoints);
     })
     .catch(error => {
       if (error.response) {
+        res.status(500).send("error");
         console.error("server error", response.status);
       } else if (error.request) {
+        res.status(500).send("error");
         console.error("no server response");
       } else {
+        res.status(500).send("error");
         console.error("error when setting up request");
       }
     });
-  res.send("getting plane points");
+  // res.send("getting plane points");
 });
 
 app.listen(5000, () => {

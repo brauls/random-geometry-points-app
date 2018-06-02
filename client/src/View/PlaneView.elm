@@ -2,7 +2,7 @@ module View.PlaneView exposing (view)
 
 import Html exposing (Html, div, form, input, label, small, text)
 import Html.Attributes exposing (class, for, id, property)
-import Models exposing (GeometryParam, GeometryParamType, Model)
+import Models exposing (GeometryParam, GeometryParamType, GeometryType, Model)
 import Msgs exposing (..)
 import View.Container exposing (embed)
 import View.FormElements exposing (GeometryFormParam, geometryForm)
@@ -23,7 +23,7 @@ planeForm model =
         formParams =
             planeFormParams model.planeParameters
     in
-    geometryForm "plane" formParams model.activeInfoLabelId
+    geometryForm Models.Plane formParams model.activeInfoLabelId
 
 
 planeFormParams : List GeometryParam -> List GeometryFormParam

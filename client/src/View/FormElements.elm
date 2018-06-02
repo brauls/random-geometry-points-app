@@ -4,7 +4,7 @@ import Html exposing (Html, button, div, form, h5, input, label, p, small, span,
 import Html.Attributes exposing (attribute, class, disabled, for, id, property, required, tabindex, type_, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Json.Encode as Encode
-import Models exposing (GeometryParam, GeometryParamType, getFormParamErrorMsg, getParamTypeName)
+import Models exposing (..)
 import Msgs exposing (..)
 import Selectors exposing (hasPlaneFormError)
 
@@ -25,14 +25,22 @@ type alias GeometryFormMetaData =
     }
 
 
-geometryForm : String -> List GeometryFormParam -> String -> Html Msg
-geometryForm geometryName geometryParams activeInfoLabelId =
+geometryForm : GeometryType -> List GeometryFormParam -> String -> Html Msg
+geometryForm geomType geometryParams activeInfoLabelId =
     let
+        geometryName =
+            getGeometryTypeName geomType
+
         formRows =
             List.map (formRow activeInfoLabelId geometryName) geometryParams
 
+        submitMsg =
+            case geomType of
+                Plane ->
+                    Msgs.OnSubmitPlaneParameters
+
         submitButton =
-            formControlSubmitButton geometryParams
+            formControlSubmitButton submitMsg geometryParams
     in
     form [] (formRows ++ [ submitButton ])
 
@@ -199,8 +207,8 @@ infoButton infoButtonId isActive =
         [ text "" ]
 
 
-formControlSubmitButton : List GeometryFormParam -> Html Msg
-formControlSubmitButton geometryParams =
+formControlSubmitButton : Msg -> List GeometryFormParam -> Html Msg
+formControlSubmitButton submitMsg geometryParams =
     let
         planeParams =
             geometryParams |> List.map (\param -> param.param)
@@ -208,12 +216,12 @@ formControlSubmitButton geometryParams =
         hasFormError =
             hasPlaneFormError planeParams
     in
-    div [ class "col-12" ]
+    div [ class "col-12 mt-2" ]
         [ button
             [ class "btn btn-primary btn-block"
             , type_ "submit"
             , disabled hasFormError
-            , onSubmit Msgs.OnSubmitPlaneParameters
+            , onClick submitMsg
             ]
             [ text "create random points"
             ]

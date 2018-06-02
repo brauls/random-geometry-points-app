@@ -79,6 +79,7 @@ expectedLocationChangeModel =
     , activeInfoLabelId = ""
     , planeParameters = initialPlaneParams
     , randomPlanePoints = RemoteData.NotAsked
+    , isProductionEnv = True
     }
 
 
@@ -102,6 +103,7 @@ expectedAvailableInfoLabelModel =
     , activeInfoLabelId = "info-label-id"
     , planeParameters = initialPlaneParams
     , randomPlanePoints = RemoteData.NotAsked
+    , isProductionEnv = True
     }
 
 
@@ -111,6 +113,7 @@ expectedUnavailableInfoLabelModel =
     , activeInfoLabelId = ""
     , planeParameters = initialPlaneParams
     , randomPlanePoints = RemoteData.NotAsked
+    , isProductionEnv = True
     }
 
 
@@ -147,6 +150,7 @@ expectedUpdatePlaneParamModel paramType value =
         initialPlaneParams
             |> List.map mapFormParam
     , randomPlanePoints = RemoteData.NotAsked
+    , isProductionEnv = True
     }
 
 
@@ -169,6 +173,7 @@ expectedUpdatePlaneParamErrorModel paramType value error =
         initialPlaneParams
             |> List.map mapFormParam
     , randomPlanePoints = RemoteData.NotAsked
+    , isProductionEnv = True
     }
 
 

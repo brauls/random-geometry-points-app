@@ -17,6 +17,10 @@ type FormParamError
     | NotPositive
 
 
+type GeometryType
+    = Plane
+
+
 type GeometryParamType
     = Radius
     | X
@@ -46,6 +50,13 @@ getFormParamErrorMsg error =
 
         NotPositive ->
             "The input value has to be positive"
+
+
+getGeometryTypeName : GeometryType -> String
+getGeometryTypeName geomType =
+    case geomType of
+        Plane ->
+            "plane"
 
 
 getParamTypeName : GeometryParamType -> String
@@ -163,6 +174,7 @@ type alias Point3D =
 
 type alias Model =
     { route : Route
+    , isProductionEnv : Bool
     , activeInfoLabelId : String
     , planeParameters : List GeometryParam
     , randomPlanePoints : WebData (List Point3D)
@@ -172,6 +184,7 @@ type alias Model =
 initialModel : Route -> Model
 initialModel route =
     { route = route
+    , isProductionEnv = True
     , activeInfoLabelId = ""
     , planeParameters = initialPlaneParams
     , randomPlanePoints = RemoteData.NotAsked
