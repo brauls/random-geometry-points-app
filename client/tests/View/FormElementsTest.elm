@@ -1,7 +1,7 @@
 module View.FormElementsTest exposing (..)
 
 import Expect
-import Fuzz exposing (string)
+import Html exposing (div)
 import Html.Attributes as Attr
 import Models exposing (getFormParamErrorMsg)
 import Msgs
@@ -98,12 +98,12 @@ testFormElements =
                     |> Query.fromHtml
                     |> Query.find [ tag "button", attribute <| Attr.type_ "submit" ]
                     |> Query.has [ text "create random points" ]
-        , test "Test the form submit button OnSubmitPlaneParameters msg to be triggered" <|
+        , test "Test the form submit event OnSubmitPlaneParameters msg to be triggered" <|
             \_ ->
-                geometryForm Models.Plane [ geometryFormParam ] ""
+                div [] [ geometryForm Models.Plane [ geometryFormParam ] "" ]
                     |> Query.fromHtml
-                    |> Query.find [ tag "button", attribute <| Attr.type_ "submit" ]
-                    |> Event.simulate Event.click
+                    |> Query.find [ tag "form" ]
+                    |> Event.simulate Event.submit
                     |> Event.toResult
                     |> Expect.equal (Ok Msgs.OnSubmitPlaneParameters)
         ]

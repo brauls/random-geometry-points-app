@@ -32,5 +32,4 @@ expectedModel =
     , activeInfoLabelId = ""
     , planeParameters = initialPlaneParams
     , randomPlanePoints = RemoteData.NotAsked
-    , isProductionEnv = True
     }

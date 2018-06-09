@@ -174,7 +174,6 @@ type alias Point3D =
 
 type alias Model =
     { route : Route
-    , isProductionEnv : Bool
     , activeInfoLabelId : String
     , planeParameters : List GeometryParam
     , randomPlanePoints : WebData (List Point3D)
@@ -184,7 +183,6 @@ type alias Model =
 initialModel : Route -> Model
 initialModel route =
     { route = route
-    , isProductionEnv = True
     , activeInfoLabelId = ""
     , planeParameters = initialPlaneParams
     , randomPlanePoints = RemoteData.NotAsked

@@ -40,9 +40,9 @@ geometryForm geomType geometryParams activeInfoLabelId =
                     Msgs.OnSubmitPlaneParameters
 
         submitButton =
-            formControlSubmitButton submitMsg geometryParams
+            formControlSubmitButton geometryParams
     in
-    form [] (formRows ++ [ submitButton ])
+    form [ onSubmit submitMsg ] (formRows ++ [ submitButton ])
 
 
 formRow : String -> String -> GeometryFormParam -> Html Msg
@@ -201,14 +201,15 @@ infoButton infoButtonId isActive =
         [ id infoButtonId
         , class classNames
         , role "button"
+        , type_ "button"
         , property "aria-label" (Encode.string "Press to get detailed description on the input field")
         , onClick (OnToggleFormInputDetails infoButtonId)
         ]
         [ text "" ]
 
 
-formControlSubmitButton : Msg -> List GeometryFormParam -> Html Msg
-formControlSubmitButton submitMsg geometryParams =
+formControlSubmitButton : List GeometryFormParam -> Html Msg
+formControlSubmitButton geometryParams =
     let
         planeParams =
             geometryParams |> List.map (\param -> param.param)
@@ -221,7 +222,6 @@ formControlSubmitButton submitMsg geometryParams =
             [ class "btn btn-primary btn-block"
             , type_ "submit"
             , disabled hasFormError
-            , onClick submitMsg
             ]
             [ text "create random points"
             ]

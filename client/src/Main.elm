@@ -17,17 +17,13 @@ import View.View exposing (view)
 init : Location -> ( Model, Cmd Msg )
 init location =
     let
-        -- if app runs on port 3000 its the dev server
-        isProductionEnv =
-            not (location.port_ == "3000")
-
         currentRoute =
             Routing.parseLocation location
 
         model =
             initialModel currentRoute
     in
-    ( { model | isProductionEnv = isProductionEnv }, Cmd.none )
+    ( model, Cmd.none )
 
 
 
@@ -89,7 +85,7 @@ update msg model =
                             Cmd.none
 
                         False ->
-                            randomPlanePointsCmd model.isProductionEnv model.planeParameters
+                            randomPlanePointsCmd model.planeParameters
             in
             ( model, cmd )
 

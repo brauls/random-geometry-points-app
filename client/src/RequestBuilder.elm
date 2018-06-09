@@ -7,19 +7,14 @@ import Msgs exposing (Msg)
 import RemoteData
 
 
-randomPlanePointsCmd : Bool -> List GeometryParam -> Cmd Msg
-randomPlanePointsCmd isProductionEnv planeParams =
+randomPlanePointsCmd : List GeometryParam -> Cmd Msg
+randomPlanePointsCmd planeParams =
     let
         uri =
             randomPlanePointsUri planeParams
 
         request =
-            case isProductionEnv of
-                True ->
-                    requestRandomPointsProd uri point3DArrayDecoder
-
-                False ->
-                    requestRandomPointsDev uri point3DArrayDecoder
+            requestRandomPoints uri point3DArrayDecoder
     in
     request
         |> RemoteData.sendRequest
@@ -44,15 +39,6 @@ point3DDecoder =
         (Decode.field "z" Decode.float)
 
 
-requestRandomPointsProd : String -> Decode.Decoder a -> Http.Request a
-requestRandomPointsProd uri decoder =
+requestRandomPoints : String -> Decode.Decoder a -> Http.Request a
+requestRandomPoints uri decoder =
     Http.get uri decoder
-
-
-requestRandomPointsDev : String -> Decode.Decoder a -> Http.Request a
-requestRandomPointsDev uri decoder =
-    let
-        url =
-            "http://localhost:5000" ++ uri
-    in
-    Http.get url decoder
