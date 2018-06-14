@@ -1,4 +1,4 @@
-module RequestBuilder exposing (randomPlanePointsCmd)
+module RequestBuilder exposing (..)
 
 import Http
 import Json.Decode as Decode
