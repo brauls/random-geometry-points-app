@@ -31,6 +31,12 @@ testView =
                     |> Query.fromHtml
                     |> Query.findAll [ id "plane-view" ]
                     |> Query.count (Expect.equal 1)
+        , test "view - check plane result route" <|
+            \_ ->
+                getHtml PlaneResultRoute
+                    |> Query.fromHtml
+                    |> Query.findAll [ id "plane-result-view" ]
+                    |> Query.count (Expect.equal 1)
         ]
 
 

@@ -1,9 +1,10 @@
 module Main exposing (..)
 
 import Debug
-import Models exposing (FormParamError, Model, getParamType, initialModel)
+import Models exposing (..)
 import Msgs exposing (Msg)
 import Navigation exposing (Location)
+import RemoteData
 import RequestBuilder exposing (..)
 import Routing
 import Selectors exposing (hasPlaneFormError)
@@ -73,9 +74,6 @@ update msg model =
 
         Msgs.OnSubmitPlaneParameters ->
             let
-                _ =
-                    Debug.log "submit" "now"
-
                 hasFormError =
                     hasPlaneFormError model.planeParameters
 
@@ -92,9 +90,17 @@ update msg model =
         Msgs.OnRandomPlanePointsResult response ->
             let
                 _ =
-                    Debug.log "on result" response
+                    Debug.log "response received" response
+
+                cmd =
+                    case response of
+                        RemoteData.Success _ ->
+                            Navigation.newUrl Routing.planeResultPath
+
+                        _ ->
+                            Cmd.none
             in
-            ( model, Cmd.none )
+            ( { model | randomPlanePoints = response }, cmd )
 
 
 

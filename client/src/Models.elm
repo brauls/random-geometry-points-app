@@ -6,6 +6,7 @@ import RemoteData exposing (WebData)
 type Route
     = HomeRoute
     | PlaneRoute
+    | PlaneResultRoute
     | NotFoundRoute
 
 

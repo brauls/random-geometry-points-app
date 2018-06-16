@@ -1,11 +1,13 @@
 module MainTest exposing (..)
 
 import Expect
+import Http
 import Main exposing (..)
 import Models exposing (..)
 import Msgs exposing (..)
 import Navigation exposing (Location)
-import RemoteData
+import RemoteData exposing (WebData)
+import Routing
 import RoutingTest exposing (homeLocation, planeLocation, unknownLocation)
 import Test exposing (..)
 
@@ -70,6 +72,38 @@ testMainUpdate =
             \_ ->
                 getUpdatePlaneParamCmd (getInitModel homeLocation) "radius" "3"
                     |> Expect.equal Cmd.none
+        , test "update - check plane points result model when not asked" <|
+            \_ ->
+                getUpdateRandomPlanePointsResultModel (getInitModel planeLocation) RemoteData.NotAsked
+                    |> Expect.equal (expectedUpdateRandomPlanePointsResultModel RemoteData.NotAsked)
+        , test "update - check plane points result model when pending" <|
+            \_ ->
+                getUpdateRandomPlanePointsResultModel (getInitModel planeLocation) RemoteData.Loading
+                    |> Expect.equal (expectedUpdateRandomPlanePointsResultModel RemoteData.Loading)
+        , test "update - check plane points result model when failure" <|
+            \_ ->
+                getUpdateRandomPlanePointsResultModel (getInitModel planeLocation) (RemoteData.Failure Http.NetworkError)
+                    |> Expect.equal (expectedUpdateRandomPlanePointsResultModel (RemoteData.Failure Http.NetworkError))
+        , test "update - check plane points result model when success" <|
+            \_ ->
+                getUpdateRandomPlanePointsResultModel (getInitModel planeLocation) (RemoteData.Success [])
+                    |> Expect.equal (expectedUpdateRandomPlanePointsResultModel (RemoteData.Success []))
+        , test "update - check plane points result cmd when not asked" <|
+            \_ ->
+                getUpdateRandomPlanePointsResultCmd (getInitModel planeLocation) RemoteData.NotAsked
+                    |> Expect.equal Cmd.none
+        , test "update - check plane points result cmd when pending" <|
+            \_ ->
+                getUpdateRandomPlanePointsResultCmd (getInitModel planeLocation) RemoteData.Loading
+                    |> Expect.equal Cmd.none
+        , test "update - check plane points result cmd when failure" <|
+            \_ ->
+                getUpdateRandomPlanePointsResultCmd (getInitModel planeLocation) (RemoteData.Failure Http.NetworkError)
+                    |> Expect.equal Cmd.none
+        , test "update - check plane points result cmd when success" <|
+            \_ ->
+                getUpdateRandomPlanePointsResultCmd (getInitModel planeLocation) (RemoteData.Success [])
+                    |> Expect.equal (Navigation.newUrl Routing.planeResultPath)
         ]
 
 
@@ -184,3 +218,26 @@ getUpdatePlaneParamCmd currentModel paramName value =
     currentModel
         |> Main.update (Msgs.OnChangePlaneParameter paramName value)
         |> Tuple.second
+
+
+getUpdateRandomPlanePointsResultModel : Model -> WebData (List Point3D) -> Model
+getUpdateRandomPlanePointsResultModel currentModel remoteData =
+    currentModel
+        |> Main.update (Msgs.OnRandomPlanePointsResult remoteData)
+        |> Tuple.first
+
+
+getUpdateRandomPlanePointsResultCmd : Model -> WebData (List Point3D) -> Cmd Msg
+getUpdateRandomPlanePointsResultCmd currentModel remoteData =
+    currentModel
+        |> Main.update (Msgs.OnRandomPlanePointsResult remoteData)
+        |> Tuple.second
+
+
+expectedUpdateRandomPlanePointsResultModel : WebData (List Point3D) -> Model
+expectedUpdateRandomPlanePointsResultModel randomPointsResult =
+    let
+        model =
+            initialModel PlaneRoute
+    in
+    { model | randomPlanePoints = randomPointsResult }

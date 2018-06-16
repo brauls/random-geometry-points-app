@@ -1,4 +1,4 @@
-module View.Container exposing (embed)
+module View.FormContainer exposing (embed)
 
 import Html exposing (Html, div)
 import Html.Attributes exposing (class)

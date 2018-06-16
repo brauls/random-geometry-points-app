@@ -9,6 +9,7 @@ matchers : Parser (Route -> a) a
 matchers =
     oneOf
         [ map Models.HomeRoute top
+        , map Models.PlaneResultRoute (s "plane-result")
         , map Models.PlaneRoute (s "plane")
         ]
 
@@ -31,3 +32,8 @@ homePath =
 planePath : String
 planePath =
     "#plane"
+
+
+planeResultPath : String
+planeResultPath =
+    "#plane-result"

@@ -4,6 +4,7 @@ import Html exposing (Html)
 import Models exposing (..)
 import Msgs exposing (Msg)
 import View.HomeView as HomeView
+import View.PlaneResultView as PlaneResultView
 import View.PlaneView as PlaneView
 
 
@@ -15,6 +16,9 @@ view model =
 
         Models.PlaneRoute ->
             PlaneView.view model
+
+        Models.PlaneResultRoute ->
+            PlaneResultView.view model
 
         Models.NotFoundRoute ->
             HomeView.view model

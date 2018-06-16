@@ -4,7 +4,7 @@ import Html exposing (Html, div, form, input, label, small, text)
 import Html.Attributes exposing (class, for, id, property)
 import Models exposing (GeometryParam, GeometryParamType, GeometryType, Model)
 import Msgs exposing (..)
-import View.Container exposing (embed)
+import View.FormContainer exposing (embed)
 import View.FormElements exposing (GeometryFormParam, geometryForm)
 import View.Navigator exposing (navbar)
 

@@ -1,4 +1,4 @@
-module View.ContainerTest exposing (..)
+module View.FormContainerTest exposing (..)
 
 import Expect
 import Html
@@ -6,7 +6,7 @@ import Html.Attributes as Attr
 import Test exposing (..)
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (attribute, id, tag)
-import View.Container exposing (embed)
+import View.FormContainer exposing (embed)
 
 
 testContainer : Test
