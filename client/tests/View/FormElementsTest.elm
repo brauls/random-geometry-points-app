@@ -17,7 +17,7 @@ testFormElements =
     describe "Test the FormElements module"
         [ test "Test the form row component count (label + input + description-label + error-label)" <|
             \_ ->
-                geometryForm Models.Plane [ geometryFormParam ] ""
+                geometryForm Models.Plane [ geometryFormParam ] "" False
                     |> Query.fromHtml
                     |> Query.findAll [ tag "div" ]
                     |> Query.first
@@ -25,7 +25,7 @@ testFormElements =
                     |> Query.count (Expect.equal 4)
         , test "Test the form row label" <|
             \_ ->
-                geometryForm Models.Plane [ geometryFormParam ] ""
+                geometryForm Models.Plane [ geometryFormParam ] "" False
                     |> Query.fromHtml
                     |> Query.find
                         [ tag "label"
@@ -35,7 +35,7 @@ testFormElements =
                     |> Query.has [ text "radius" ]
         , test "Test the form row input" <|
             \_ ->
-                geometryForm Models.Plane [ geometryFormParam ] ""
+                geometryForm Models.Plane [ geometryFormParam ] "" False
                     |> Query.fromHtml
                     |> Query.find
                         [ tag "input"
@@ -47,7 +47,7 @@ testFormElements =
                     |> Query.has []
         , test "Test the form row description label" <|
             \_ ->
-                geometryForm Models.Plane [ geometryFormParam ] ""
+                geometryForm Models.Plane [ geometryFormParam ] "" False
                     |> Query.fromHtml
                     |> Query.find
                         [ tag "small"
@@ -56,7 +56,7 @@ testFormElements =
                     |> Query.has [ text "the radius description" ]
         , test "Test the OnChangePlaneParameter msg to be triggered" <|
             \_ ->
-                geometryForm Models.Plane [ geometryFormParam ] ""
+                geometryForm Models.Plane [ geometryFormParam ] "" False
                     |> Query.fromHtml
                     |> Query.find [ tag "input", id "input-plane-radius" ]
                     |> Event.simulate (Event.input "3")
@@ -64,7 +64,7 @@ testFormElements =
                     |> Expect.equal (Ok (Msgs.OnChangePlaneParameter "radius" "3"))
         , test "Test the form row error container classes when no error" <|
             \_ ->
-                geometryForm Models.Plane [ geometryFormParam ] ""
+                geometryForm Models.Plane [ geometryFormParam ] "" False
                     |> Query.fromHtml
                     |> Query.findAll [ tag "div" ]
                     |> Query.first
@@ -73,13 +73,13 @@ testFormElements =
                     |> Query.has [ classes [ "d-none" ] ]
         , test "Test the form row error label text when no error" <|
             \_ ->
-                geometryForm Models.Plane [ geometryFormParam ] ""
+                geometryForm Models.Plane [ geometryFormParam ] "" False
                     |> Query.fromHtml
                     |> Query.find [ tag "small", id "label-error-plane-radius" ]
                     |> Query.has [ text "" ]
         , test "Test the form row error container classes when error" <|
             \_ ->
-                geometryForm Models.Plane [ geometryFormParamWithError ] ""
+                geometryForm Models.Plane [ geometryFormParamWithError ] "" False
                     |> Query.fromHtml
                     |> Query.findAll [ tag "div" ]
                     |> Query.first
@@ -88,24 +88,52 @@ testFormElements =
                     |> Query.hasNot [ classes [ "d-none" ] ]
         , test "Test the form row error label text when error" <|
             \_ ->
-                geometryForm Models.Plane [ geometryFormParamWithError ] ""
+                geometryForm Models.Plane [ geometryFormParamWithError ] "" False
                     |> Query.fromHtml
                     |> Query.find [ tag "small", id "label-error-plane-radius" ]
                     |> Query.has [ Models.NotPositive |> getFormParamErrorMsg |> text ]
         , test "Test the form submit button presence" <|
             \_ ->
-                geometryForm Models.Plane [ geometryFormParam ] ""
+                geometryForm Models.Plane [ geometryFormParam ] "" False
                     |> Query.fromHtml
                     |> Query.find [ tag "button", attribute <| Attr.type_ "submit" ]
                     |> Query.has [ text "create random points" ]
         , test "Test the form submit event OnSubmitPlaneParameters msg to be triggered" <|
             \_ ->
-                div [] [ geometryForm Models.Plane [ geometryFormParam ] "" ]
+                div [] [ geometryForm Models.Plane [ geometryFormParam ] "" False ]
                     |> Query.fromHtml
                     |> Query.find [ tag "form" ]
                     |> Event.simulate Event.submit
                     |> Event.toResult
                     |> Expect.equal (Ok Msgs.OnSubmitPlaneParameters)
+        , test "Test the form submit button loading indicator classes when not loading" <|
+            \_ ->
+                geometryForm Models.Plane [ geometryFormParam ] "" False
+                    |> Query.fromHtml
+                    |> Query.find [ tag "button", attribute <| Attr.type_ "submit" ]
+                    |> Query.find [ tag "i" ]
+                    |> Query.hasNot [ classes [ "fas", "fa-spinner", "loading-indicator", "mr-2" ] ]
+        , test "Test the form submit button loading indicator display status when not loading" <|
+            \_ ->
+                geometryForm Models.Plane [ geometryFormParam ] "" False
+                    |> Query.fromHtml
+                    |> Query.find [ tag "button", attribute <| Attr.type_ "submit" ]
+                    |> Query.find [ tag "i" ]
+                    |> Query.has [ classes [ "d-none" ] ]
+        , test "Test the form submit button loading indicator classes when loading" <|
+            \_ ->
+                geometryForm Models.Plane [ geometryFormParam ] "" True
+                    |> Query.fromHtml
+                    |> Query.find [ tag "button", attribute <| Attr.type_ "submit" ]
+                    |> Query.find [ tag "i" ]
+                    |> Query.has [ classes [ "fas", "fa-spinner", "loading-indicator", "mr-2" ] ]
+        , test "Test the form submit button loading indicator display status when loading" <|
+            \_ ->
+                geometryForm Models.Plane [ geometryFormParam ] "" True
+                    |> Query.fromHtml
+                    |> Query.find [ tag "button", attribute <| Attr.type_ "submit" ]
+                    |> Query.find [ tag "i" ]
+                    |> Query.hasNot [ classes [ "d-none" ] ]
         ]
 
 

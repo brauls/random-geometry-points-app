@@ -1,6 +1,6 @@
 module View.FormElements exposing (GeometryFormParam, geometryForm)
 
-import Html exposing (Html, button, div, form, h5, input, label, p, small, span, text)
+import Html exposing (Html, button, div, form, h5, i, input, label, p, small, span, text)
 import Html.Attributes exposing (attribute, class, disabled, for, id, property, required, tabindex, type_, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Json.Encode as Encode
@@ -25,8 +25,8 @@ type alias GeometryFormMetaData =
     }
 
 
-geometryForm : GeometryType -> List GeometryFormParam -> String -> Html Msg
-geometryForm geomType geometryParams activeInfoLabelId =
+geometryForm : GeometryType -> List GeometryFormParam -> String -> Bool -> Html Msg
+geometryForm geomType geometryParams activeInfoLabelId isLoading =
     let
         geometryName =
             getGeometryTypeName geomType
@@ -40,7 +40,7 @@ geometryForm geomType geometryParams activeInfoLabelId =
                     Msgs.OnSubmitPlaneParameters
 
         submitButton =
-            formControlSubmitButton geometryParams
+            formControlSubmitButton geometryParams isLoading
     in
     form [ onSubmit submitMsg ] (formRows ++ [ submitButton ])
 
@@ -208,14 +208,22 @@ infoButton infoButtonId isActive =
         [ text "" ]
 
 
-formControlSubmitButton : List GeometryFormParam -> Html Msg
-formControlSubmitButton geometryParams =
+formControlSubmitButton : List GeometryFormParam -> Bool -> Html Msg
+formControlSubmitButton geometryParams isLoading =
     let
         planeParams =
             geometryParams |> List.map (\param -> param.param)
 
         hasFormError =
             hasPlaneFormError planeParams
+
+        loadingIndicatorClass =
+            case isLoading of
+                True ->
+                    "fas fa-spinner loading-indicator mr-2"
+
+                False ->
+                    "d-none"
     in
     div [ class "col-12 mt-2" ]
         [ button
@@ -223,7 +231,8 @@ formControlSubmitButton geometryParams =
             , type_ "submit"
             , disabled hasFormError
             ]
-            [ text "create random points"
+            [ i [ class loadingIndicatorClass ] []
+            , text "create random points"
             ]
         ]
 

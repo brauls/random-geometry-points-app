@@ -84,8 +84,16 @@ update msg model =
 
                         False ->
                             randomPlanePointsCmd model.planeParameters
+
+                queryStatus =
+                    case hasFormError of
+                        True ->
+                            model.randomPlanePoints
+
+                        False ->
+                            RemoteData.Loading
             in
-            ( model, cmd )
+            ( { model | randomPlanePoints = queryStatus }, cmd )
 
         Msgs.OnRandomPlanePointsResult response ->
             let

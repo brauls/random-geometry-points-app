@@ -1,9 +1,11 @@
 module View.PlaneView exposing (view)
 
+import Debug
 import Html exposing (Html, div, form, input, label, small, text)
 import Html.Attributes exposing (class, for, id, property)
 import Models exposing (GeometryParam, GeometryParamType, GeometryType, Model)
 import Msgs exposing (..)
+import RemoteData
 import View.FormContainer exposing (embed)
 import View.FormElements exposing (GeometryFormParam, geometryForm)
 import View.Navigator exposing (navbar)
@@ -20,10 +22,16 @@ view model =
 planeForm : Model -> Html Msg
 planeForm model =
     let
+        isLoading =
+            model.randomPlanePoints == RemoteData.Loading
+
+        _ =
+            Debug.log "plane form" isLoading
+
         formParams =
             planeFormParams model.planeParameters
     in
-    geometryForm Models.Plane formParams model.activeInfoLabelId
+    geometryForm Models.Plane formParams model.activeInfoLabelId isLoading
 
 
 planeFormParams : List GeometryParam -> List GeometryFormParam
