@@ -1,7 +1,7 @@
 module View.RandomPoints3DView exposing (view)
 
 import Html exposing (Html, caption, div, table, tbody, td, text, th, thead, tr)
-import Html.Attributes exposing (class, id, scope)
+import Html.Attributes exposing (class, id, property, scope)
 import Models exposing (Point3D)
 import RemoteData exposing (WebData)
 import Round

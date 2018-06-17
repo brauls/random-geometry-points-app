@@ -2,7 +2,7 @@ module RequestBuilder exposing (..)
 
 import Http
 import Json.Decode as Decode
-import Models exposing (GeometryParam, Point3D)
+import Models exposing (GeometryParam, Point3D, getParamTypeName)
 import Msgs exposing (Msg)
 import RemoteData
 
@@ -23,7 +23,18 @@ randomPlanePointsCmd planeParams =
 
 randomPlanePointsUri : List GeometryParam -> String
 randomPlanePointsUri planeParams =
-    "/random-plane-points"
+    let
+        parseQueryParam =
+            \param ->
+                "&" ++ getParamTypeName param.paramType ++ "=" ++ param.value
+
+        queryParams =
+            planeParams
+                |> List.map parseQueryParam
+                |> List.foldl (++) ""
+                |> String.dropLeft 1
+    in
+    "/random-plane-points?" ++ queryParams
 
 
 point3DArrayDecoder : Decode.Decoder (List Point3D)

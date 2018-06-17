@@ -11,3 +11,4 @@ type Msg
     | OnChangePlaneParameter String String
     | OnSubmitPlaneParameters
     | OnRandomPlanePointsResult (WebData (List Point3D))
+    | OnClosePlanePointsError

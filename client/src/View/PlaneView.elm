@@ -1,11 +1,12 @@
 module View.PlaneView exposing (view)
 
-import Debug
-import Html exposing (Html, div, form, input, label, small, text)
-import Html.Attributes exposing (class, for, id, property)
-import Models exposing (GeometryParam, GeometryParamType, GeometryType, Model)
-import Msgs exposing (..)
+import ErrorDecoder exposing (parseHttpError)
+import Html exposing (Html, div)
+import Html.Attributes exposing (id)
+import Models exposing (GeometryParam, GeometryParamType, Model)
+import Msgs exposing (Msg)
 import RemoteData
+import View.ErrorModal as ErrorModal
 import View.FormContainer exposing (embed)
 import View.FormElements exposing (GeometryFormParam, geometryForm)
 import View.Navigator exposing (navbar)
@@ -13,9 +14,19 @@ import View.Navigator exposing (navbar)
 
 view : Model -> Html Msg
 view model =
+    let
+        requestError =
+            case model.randomPlanePoints of
+                RemoteData.Failure error ->
+                    Just (parseHttpError error)
+
+                _ ->
+                    Nothing
+    in
     div [ id "plane-view" ]
         [ navbar
         , planeForm model |> embed
+        , ErrorModal.modal requestError Msgs.OnClosePlanePointsError
         ]
 
 
@@ -24,9 +35,6 @@ planeForm model =
     let
         isLoading =
             model.randomPlanePoints == RemoteData.Loading
-
-        _ =
-            Debug.log "plane form" isLoading
 
         formParams =
             planeFormParams model.planeParameters

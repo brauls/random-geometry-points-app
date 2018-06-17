@@ -25,41 +25,13 @@ app.get("/random-plane-points", (req, res) => {
     "http://random-geometry-points-service.herokuapp.com/random-plane-points/3d/";
   console.log("incoming request");
   console.log(req.query);
-  const params = [
-    {
-      key: "num_points",
-      value: 5
-    },
-    {
-      key: "radius",
-      value: 5
-    },
-    {
-      key: "ref_x",
-      value: 5
-    },
-    {
-      key: "ref_y",
-      value: 5
-    },
-    {
-      key: "ref_z",
-      value: 5
-    },
-    {
-      key: "n_x",
-      value: 5
-    },
-    {
-      key: "n_y",
-      value: 5
-    },
-    {
-      key: "n_z",
-      value: 5
-    }
-  ];
+
+  const params = parseQueryParams(req.query);
+
   const urlWithParams = createUrl(url, params);
+
+  console.log("starting request with url", urlWithParams);
+
   axios
     .get(urlWithParams)
     .then(response => {
@@ -72,15 +44,17 @@ app.get("/random-plane-points", (req, res) => {
       console.log(randomPoints);
     })
     .catch(error => {
+      console.log("an error occured");
       if (error.response) {
-        res.status(500).send("error");
-        console.error("server error", response.status);
+        console.error("server error", error.response.status);
+        console.error("body", error.response.data);
+        return res.status(500).send("error");
       } else if (error.request) {
-        res.status(500).send("error");
         console.error("no server response");
+        return res.status(500).send("error");
       } else {
-        res.status(500).send("error");
         console.error("error when setting up request");
+        return res.status(500).send("error");
       }
     });
   // res.send("getting plane points");
@@ -89,6 +63,12 @@ app.get("/random-plane-points", (req, res) => {
 app.listen(5000, () => {
   console.log("App listening on port 5000");
 });
+
+const parseQueryParams = queryParams =>
+  Object.keys(queryParams).map(key => ({
+    key: key,
+    value: queryParams[key]
+  }));
 
 const createUrl = (baseUrl, params) =>
   params.reduce((acc, param, index) => {

@@ -104,6 +104,14 @@ testMainUpdate =
             \_ ->
                 getUpdateRandomPlanePointsResultCmd (getInitModel planeLocation) (RemoteData.Success [])
                     |> Expect.equal (Navigation.newUrl Routing.planeResultPath)
+        , test "update - check close plane points error model when has error" <|
+            \_ ->
+                getUpdateClosePlanePointsErrorModel (planePointsErrorModel True)
+                    |> Expect.equal (planePointsErrorModel False)
+        , test "update - check close plane points error model when has no error" <|
+            \_ ->
+                getUpdateClosePlanePointsErrorModel (planePointsErrorModel False)
+                    |> Expect.equal (planePointsErrorModel False)
         ]
 
 
@@ -241,3 +249,34 @@ expectedUpdateRandomPlanePointsResultModel randomPointsResult =
             initialModel PlaneRoute
     in
     { model | randomPlanePoints = randomPointsResult }
+
+
+getUpdateClosePlanePointsErrorModel : Model -> Model
+getUpdateClosePlanePointsErrorModel currentModel =
+    currentModel
+        |> Main.update Msgs.OnClosePlanePointsError
+        |> Tuple.first
+
+
+getUpdateClosePlanePointsErrorCmd : Model -> Cmd Msg
+getUpdateClosePlanePointsErrorCmd currentModel =
+    currentModel
+        |> Main.update Msgs.OnClosePlanePointsError
+        |> Tuple.second
+
+
+planePointsErrorModel : Bool -> Model
+planePointsErrorModel hasError =
+    let
+        webData =
+            case hasError of
+                True ->
+                    RemoteData.Failure Http.NetworkError
+
+                False ->
+                    RemoteData.NotAsked
+
+        model =
+            initialModel PlaneRoute
+    in
+    { model | randomPlanePoints = webData }

@@ -1,6 +1,5 @@
 module Main exposing (..)
 
-import Debug
 import Models exposing (..)
 import Msgs exposing (Msg)
 import Navigation exposing (Location)
@@ -97,9 +96,6 @@ update msg model =
 
         Msgs.OnRandomPlanePointsResult response ->
             let
-                _ =
-                    Debug.log "response received" response
-
                 cmd =
                     case response of
                         RemoteData.Success _ ->
@@ -109,6 +105,9 @@ update msg model =
                             Cmd.none
             in
             ( { model | randomPlanePoints = response }, cmd )
+
+        Msgs.OnClosePlanePointsError ->
+            ( { model | randomPlanePoints = RemoteData.NotAsked }, Cmd.none )
 
 
 
