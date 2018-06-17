@@ -12,9 +12,6 @@ type alias RequestError =
 parseHttpError : Http.Error -> RequestError
 parseHttpError httpError =
     let
-        _ =
-            Debug.log "parsing" httpError
-
         errorMsg =
             case httpError of
                 Http.Timeout ->
