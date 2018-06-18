@@ -35,6 +35,7 @@ app.get("/random-plane-points", (req, res) => {
   axios
     .get(urlWithParams)
     .then(response => {
+      console.log("response", response);
       const randomPoints = response.data.map(pnt => ({
         x: pnt.x_coord,
         y: pnt.y_coord,
@@ -66,7 +67,7 @@ app.listen(5000, () => {
 
 const parseQueryParams = queryParams =>
   Object.keys(queryParams).map(key => ({
-    key: key,
+    key: getParamApiName(key),
     value: queryParams[key]
   }));
 
@@ -75,3 +76,24 @@ const createUrl = (baseUrl, params) =>
     const delim = index === 0 ? "?" : "&";
     return `${acc}${delim}${param.key}=${param.value}`;
   }, baseUrl);
+
+const getParamApiName = paramType => {
+  switch (paramType) {
+    case "x":
+      return "ref_x";
+    case "y":
+      return "ref_y";
+    case "z":
+      return "ref_z";
+    case "i":
+      return "n_x";
+    case "j":
+      return "n_y";
+    case "k":
+      return "n_z";
+    case "radius":
+      return "radius";
+    case "number":
+      return "num_points";
+  }
+};

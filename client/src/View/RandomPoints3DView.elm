@@ -31,7 +31,7 @@ view captionText randomPointsResult =
 
 resultTable : String -> List Point3D -> Html msg
 resultTable captionText randomPoints =
-    div [ class "table-responsive" ]
+    div [ class "table-responsive table-sm" ]
         [ table [ class "table" ]
             [ tableCaption captionText
             , tableHead
