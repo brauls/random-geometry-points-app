@@ -2,14 +2,11 @@ import request from "supertest";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 
+import app, { server } from "../server.js";
+
 const mockAxios = new MockAdapter(axios);
 
-import app from "../server.js";
-
 describe("server", () => {
-  test("test1", () => {
-    expect(2).toEqual(2);
-  });
   test("test random plane points - failure with message", () => {
     mockAxios
       .onGet(
@@ -24,7 +21,6 @@ describe("server", () => {
       .get(testUrl)
       .then(
         response => {
-          mockAxios.reset();
           expect(response.statusCode).toEqual(400);
           expect(response.text).toEqual("Invalid plane definition supplied");
           return Promise.resolve();
@@ -44,7 +40,6 @@ describe("server", () => {
       .get(testUrl)
       .then(
         response => {
-          mockAxios.reset();
           expect(response.statusCode).toEqual(400);
           expect(response.text).toEqual("Unexpected error");
           return Promise.resolve();
@@ -74,7 +69,6 @@ describe("server", () => {
       .get(testUrl)
       .then(
         response => {
-          mockAxios.reset();
           expect(response.statusCode).toEqual(200);
           expect(response.body).toEqual([
             {
@@ -92,5 +86,12 @@ describe("server", () => {
         },
         _ => Promise.reject("Error during test")
       );
+  });
+  afterEach(() => {
+    mockAxios.reset();
+  });
+  afterAll(() => {
+    mockAxios.restore();
+    server.close();
   });
 });

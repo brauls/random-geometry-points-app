@@ -45,7 +45,7 @@ app.get("/random-plane-points", (req, res) => {
     });
 });
 
-app.listen(5000, () => {
+export const server = app.listen(5000, () => {
   console.log("App listening on port 5000");
 });
 
