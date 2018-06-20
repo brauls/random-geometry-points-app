@@ -1,7 +1,7 @@
 module View.RandomPoints3DView exposing (view)
 
-import Html exposing (Html, caption, div, table, tbody, td, text, th, thead, tr)
-import Html.Attributes exposing (class, id, property, scope)
+import Html exposing (Html, button, caption, div, table, tbody, td, text, th, thead, tr)
+import Html.Attributes exposing (attribute, class, id, property, scope, title)
 import Models exposing (Point3D)
 import RemoteData exposing (WebData)
 import Round
@@ -17,12 +17,22 @@ view captionText randomPointsResult =
 
                 _ ->
                     []
+
+        parsePointForClipboard =
+            \param ->
+                roundCoordinate param.x ++ "\t" ++ roundCoordinate param.y ++ "\t" ++ roundCoordinate param.z ++ "\n"
+
+        copyToClipboardText =
+            randomPoints
+                |> List.map parsePointForClipboard
+                |> List.foldr (++) ""
     in
     div [ class "container-fluid" ]
         [ div [ class "row mt-2" ]
             [ div [ class "col-lg-2" ] []
             , div [ class "col-lg-8" ]
-                [ resultTable captionText randomPoints
+                [ buttonCopyToClipboard copyToClipboardText
+                , resultTable captionText randomPoints
                 ]
             , div [ class "col-lg-2" ] []
             ]
@@ -71,7 +81,24 @@ tableRow : Int -> Point3D -> Html msg
 tableRow index randomPoint =
     tr []
         [ th [] [ text (toString (index + 1)) ]
-        , td [] [ text (Round.round 2 randomPoint.x) ]
-        , td [] [ text (Round.round 2 randomPoint.y) ]
-        , td [] [ text (Round.round 2 randomPoint.z) ]
+        , td [] [ text (roundCoordinate randomPoint.x) ]
+        , td [] [ text (roundCoordinate randomPoint.y) ]
+        , td [] [ text (roundCoordinate randomPoint.z) ]
         ]
+
+
+buttonCopyToClipboard : String -> Html msg
+buttonCopyToClipboard copyText =
+    div [ class "d-flex flex-row-reverse" ]
+        [ button
+            [ class "btn btn-outline-secondary fas fa-copy m-1"
+            , title "copy to clipboard"
+            , attribute "data-clipboard-text" copyText
+            ]
+            []
+        ]
+
+
+roundCoordinate : Float -> String
+roundCoordinate coordinate =
+    Round.round 2 coordinate
