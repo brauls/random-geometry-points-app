@@ -45,8 +45,12 @@ app.get("/random-plane-points", (req, res) => {
     });
 });
 
-export const server = app.listen(5000, () => {
-  console.log("App listening on port 5000");
+export const server = app.listen(process.env.PORT || 5000, () => {
+  if (process.env.PORT) {
+    console.log("App listening on port " + process.env.PORT);
+  } else {
+    console.log("App listening on port 5000");
+  }
 });
 
 const parseQueryParams = queryParams =>
