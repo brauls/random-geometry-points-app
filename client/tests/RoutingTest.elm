@@ -1,10 +1,12 @@
 module RoutingTest exposing (..)
 
+import Browser
+import Browser.Navigation as Navigation
 import Expect
 import Models exposing (..)
-import Navigation exposing (Location)
 import Routing exposing (..)
 import Test exposing (..)
+import Url
 
 
 testRouting : Test
@@ -14,37 +16,52 @@ testRouting =
             \_ -> Expect.equal HomeRoute (parseLocation homeLocation)
         , test "parseLocation - plane" <|
             \_ -> Expect.equal PlaneRoute (parseLocation planeLocation)
+        , test "parseLocation - plane result" <|
+            \_ -> Expect.equal PlaneResultRoute (parseLocation planeResultLocation)
         , test "parseLocation - unknown" <|
             \_ -> Expect.equal NotFoundRoute (parseLocation unknownLocation)
         ]
 
 
-homeLocation : Location
+homeLocation : Url.Url
 homeLocation =
-    getLocation homePath
+    { protocol = Url.Http
+    , host = "localhost"
+    , port_ = Just 5000
+    , path = "/"
+    , query = Nothing
+    , fragment = Nothing
+    }
 
 
-planeLocation : Location
+planeLocation : Url.Url
 planeLocation =
-    getLocation planePath
+    { protocol = Url.Http
+    , host = "localhost"
+    , port_ = Just 5000
+    , path = "/plane"
+    , query = Nothing
+    , fragment = Nothing
+    }
 
 
-unknownLocation : Location
+unknownLocation : Url.Url
 unknownLocation =
-    getLocation "#random"
+    { protocol = Url.Http
+    , host = "localhost"
+    , port_ = Just 5000
+    , path = "/random"
+    , query = Nothing
+    , fragment = Nothing
+    }
 
 
-getLocation : String -> Location
-getLocation hash =
-    { hash = hash
-    , host = ""
-    , hostname = ""
-    , href = ""
-    , origin = ""
-    , password = ""
-    , pathname = ""
-    , port_ = ""
-    , protocol = ""
-    , search = ""
-    , username = ""
+planeResultLocation : Url.Url
+planeResultLocation =
+    { protocol = Url.Http
+    , host = "localhost"
+    , port_ = Just 5000
+    , path = "/plane-result"
+    , query = Nothing
+    , fragment = Nothing
     }

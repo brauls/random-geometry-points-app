@@ -1,10 +1,12 @@
 import "./main.css";
-import { Main } from "./Main.elm";
-import registerServiceWorker from "./registerServiceWorker";
+import { Elm } from './Main.elm';
+import registerServiceWorker from './registerServiceWorker';
 
 import ClipboardJS from "clipboard";
 
-const app = Main.embed(document.getElementById("root"));
+Elm.Main.init({
+  node: document.getElementById('root')
+});
 
 const clipboard = new ClipboardJS(".btn");
 

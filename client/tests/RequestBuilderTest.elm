@@ -1,12 +1,13 @@
 module RequestBuilderTest exposing (..)
 
-import Expect
-import Fuzz exposing (float, int, string)
+import Expect exposing (Expectation)
+import Fuzz exposing (Fuzzer, float, int, string, tuple)
 import Json.Decode exposing (Decoder, decodeValue)
 import Json.Encode as Json
 import Models exposing (GeometryParam, Point3D)
 import RequestBuilder exposing (..)
-import Test exposing (Test, describe, fuzz3, fuzz4, test)
+import Test exposing (Test, describe, fuzz, fuzz3, test)
+import Tuple
 
 
 testRequestBuilder : Test
@@ -72,8 +73,26 @@ testRequestBuilder =
                 decodeValue point3DDecoder json
                     |> Expect.equal (Ok (Point3D xF y zF))
         , fuzz4 float float float string "point3DDecoder - extended input" <|
-            \x y z name ->
+            \x_y_z_name ->
                 let
+                    x_y =
+                        Tuple.first x_y_z_name
+
+                    z_name =
+                        Tuple.second x_y_z_name
+
+                    x =
+                        Tuple.first x_y
+
+                    y =
+                        Tuple.second x_y
+
+                    z =
+                        Tuple.first z_name
+
+                    name =
+                        Tuple.second z_name
+
                     json =
                         Json.object
                             [ ( "x", Json.float x )
@@ -139,3 +158,18 @@ getTestPlaneParams =
 expectedPlanePointsUri : String
 expectedPlanePointsUri =
     "/random-plane-points?number=965&k=0&j=0&i=1&z=-0.66&y=1.5&x=-2&radius=4"
+
+
+fuzz4 : Fuzzer a -> Fuzzer b -> Fuzzer c -> Fuzzer d -> String -> (( ( a, b ), ( c, d ) ) -> Expectation) -> Test
+fuzz4 fuzzA fuzzB fuzzC fuzzD desc exp =
+    let
+        fuzzAB =
+            tuple ( fuzzA, fuzzB )
+
+        fuzzCD =
+            tuple ( fuzzC, fuzzD )
+
+        fuzzer =
+            tuple ( fuzzAB, fuzzCD )
+    in
+    fuzz fuzzer desc exp

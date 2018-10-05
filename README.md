@@ -5,3 +5,7 @@
 App to generate random points on geometry surfaces
 
 https://github.com/halfzebra/create-elm-app
+
+## note
+- view tests are currently commented out (see [elm-html-test](https://github.com/eeue56/elm-html-test/issues/69)).
+- tests involving a model are currently commented out (see [elm-explorations/test](https://github.com/elm-explorations/test/issues/24)).

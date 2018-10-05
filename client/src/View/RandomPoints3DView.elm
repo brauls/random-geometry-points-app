@@ -5,6 +5,7 @@ import Html.Attributes exposing (attribute, class, id, property, scope, title)
 import Models exposing (Point3D)
 import RemoteData exposing (WebData)
 import Round
+import String exposing (fromInt)
 
 
 view : String -> WebData (List Point3D) -> Html msg
@@ -80,7 +81,7 @@ tableBody randomPoints =
 tableRow : Int -> Point3D -> Html msg
 tableRow index randomPoint =
     tr []
-        [ th [] [ text (toString (index + 1)) ]
+        [ th [] [ text (fromInt (index + 1)) ]
         , td [] [ text (roundCoordinate randomPoint.x) ]
         , td [] [ text (roundCoordinate randomPoint.y) ]
         , td [] [ text (roundCoordinate randomPoint.z) ]

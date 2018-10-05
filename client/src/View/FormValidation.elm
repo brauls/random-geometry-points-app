@@ -32,7 +32,7 @@ validate paramType value =
 validateRadius : String -> FormParamError
 validateRadius radius =
     case radius |> String.toFloat of
-        Ok radiusF ->
+        Just radiusF ->
             case radiusF > 0.0 of
                 True ->
                     Models.NoError
@@ -40,14 +40,14 @@ validateRadius radius =
                 False ->
                     Models.NotPositive
 
-        Err _ ->
+        Nothing ->
             Models.NotFloat
 
 
 validatePointCount : String -> FormParamError
 validatePointCount pointCount =
     case pointCount |> String.toInt of
-        Ok pointCountI ->
+        Just pointCountI ->
             case pointCountI > 0 of
                 True ->
                     Models.NoError
@@ -55,15 +55,15 @@ validatePointCount pointCount =
                 False ->
                     Models.NotPositive
 
-        Err _ ->
+        Nothing ->
             Models.NotInt
 
 
 validateGeneralGeometryParam : String -> FormParamError
 validateGeneralGeometryParam value =
     case value |> String.toFloat of
-        Ok _ ->
+        Just _ ->
             Models.NoError
 
-        Err _ ->
+        Nothing ->
             Models.NotFloat

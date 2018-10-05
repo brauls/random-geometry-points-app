@@ -1,6 +1,7 @@
 module ErrorDecoder exposing (..)
 
 import Http
+import String exposing (fromInt)
 
 
 type alias RequestError =
@@ -63,5 +64,5 @@ badPayloadError =
 badStatusError : Http.Response String -> RequestError
 badStatusError response =
     { message = response.body
-    , hint = "The status code was HTTP " ++ toString response.status.code
+    , hint = "The status code was HTTP " ++ fromInt response.status.code
     }

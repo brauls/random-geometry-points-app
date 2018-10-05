@@ -1,12 +1,14 @@
 module Msgs exposing (..)
 
+import Browser
 import Models exposing (Point3D)
-import Navigation exposing (Location)
 import RemoteData exposing (WebData)
+import Url
 
 
 type Msg
-    = OnLocationChange Location
+    = OnLinkClicked Browser.UrlRequest
+    | OnUrlChanged Url.Url
     | OnToggleFormInputDetails String
     | OnChangePlaneParameter String String
     | OnSubmitPlaneParameters

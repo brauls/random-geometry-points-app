@@ -1,5 +1,6 @@
 module Models exposing (..)
 
+import Browser.Navigation as Navigation
 import RemoteData exposing (WebData)
 
 
@@ -174,16 +175,18 @@ type alias Point3D =
 
 
 type alias Model =
-    { route : Route
+    { navKey : Navigation.Key
+    , route : Route
     , activeInfoLabelId : String
     , planeParameters : List GeometryParam
     , randomPlanePoints : WebData (List Point3D)
     }
 
 
-initialModel : Route -> Model
-initialModel route =
-    { route = route
+initialModel : Navigation.Key -> Route -> Model
+initialModel navKey route =
+    { navKey = navKey
+    , route = route
     , activeInfoLabelId = ""
     , planeParameters = initialPlaneParams
     , randomPlanePoints = RemoteData.NotAsked

@@ -1,8 +1,8 @@
 module Routing exposing (..)
 
 import Models exposing (Route)
-import Navigation exposing (Location)
-import UrlParser exposing (Parser, map, oneOf, parseHash, s, top)
+import Url
+import Url.Parser exposing (Parser, map, oneOf, parse, s, top)
 
 
 matchers : Parser (Route -> a) a
@@ -14,9 +14,9 @@ matchers =
         ]
 
 
-parseLocation : Location -> Route
-parseLocation location =
-    case parseHash matchers location of
+parseLocation : Url.Url -> Route
+parseLocation url =
+    case parse matchers url of
         Just route ->
             route
 
@@ -26,14 +26,14 @@ parseLocation location =
 
 homePath : String
 homePath =
-    "#"
+    "/"
 
 
 planePath : String
 planePath =
-    "#plane"
+    "plane"
 
 
 planeResultPath : String
 planeResultPath =
-    "#plane-result"
+    "plane-result"

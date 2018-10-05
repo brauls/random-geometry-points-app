@@ -25,7 +25,7 @@ modal requestErrorMaybe closeMsg =
 modalDialog : RequestError -> Msg -> Html Msg
 modalDialog requestError closeMsg =
     div []
-        [ div [ class "modal in", style [ ( "display", "block" ) ], property "role" (Encode.string "dialog") ]
+        [ div [ class "modal in", style "display" "block", property "role" (Encode.string "dialog") ]
             [ div [ class "modal-dialog modal-lg", property "role" (Encode.string "document") ]
                 [ div [ class "modal-content" ]
                     [ modalHeader "Random points error" closeMsg
@@ -33,7 +33,7 @@ modalDialog requestError closeMsg =
                     ]
                 ]
             ]
-        , div [ class "modal-backdrop", style [ ( "opacity", "0.5" ) ] ] []
+        , div [ class "modal-backdrop", style "opacity" "0.5" ] []
         ]
 
 

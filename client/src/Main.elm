@@ -1,12 +1,14 @@
 module Main exposing (..)
 
+import Browser
+import Browser.Navigation as Navigation
 import Models exposing (..)
 import Msgs exposing (Msg)
-import Navigation exposing (Location)
 import RemoteData
 import RequestBuilder exposing (..)
 import Routing
 import Selectors exposing (hasPlaneFormError)
+import Url
 import View.FormValidation exposing (validateFormParam)
 import View.View exposing (view)
 
@@ -14,14 +16,14 @@ import View.View exposing (view)
 ---- INIT ----
 
 
-init : Location -> ( Model, Cmd Msg )
-init location =
+init : () -> Url.Url -> Navigation.Key -> ( Model, Cmd Msg )
+init flags url key =
     let
         currentRoute =
-            Routing.parseLocation location
+            Routing.parseLocation url
 
         model =
-            initialModel currentRoute
+            initialModel key currentRoute
     in
     ( model, Cmd.none )
 
@@ -33,10 +35,18 @@ init location =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Msgs.OnLocationChange location ->
+        Msgs.OnLinkClicked urlRequest ->
+            case urlRequest of
+                Browser.Internal url ->
+                    ( model, Navigation.pushUrl model.navKey (Url.toString url) )
+
+                Browser.External href ->
+                    ( model, Cmd.none )
+
+        Msgs.OnUrlChanged url ->
             let
                 newRoute =
-                    Routing.parseLocation location
+                    Routing.parseLocation url
             in
             ( { model | route = newRoute }, Cmd.none )
 
@@ -99,7 +109,7 @@ update msg model =
                 cmd =
                     case response of
                         RemoteData.Success _ ->
-                            Navigation.newUrl Routing.planeResultPath
+                            Navigation.pushUrl model.navKey Routing.planeResultPath
 
                         _ ->
                             Cmd.none
@@ -114,11 +124,13 @@ update msg model =
 ---- PROGRAM ----
 
 
-main : Program Never Model Msg
+main : Program () Model Msg
 main =
-    Navigation.program Msgs.OnLocationChange
-        { view = view
-        , init = init
+    Browser.application
+        { init = init
+        , view = view
         , update = update
         , subscriptions = always Sub.none
+        , onUrlChange = Msgs.OnUrlChanged
+        , onUrlRequest = Msgs.OnLinkClicked
         }
